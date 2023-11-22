@@ -95,7 +95,7 @@ jobs:
         SDK_URL: ${{ matrix.SDK_URL }}
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1-\2/p' <<< $SDK_URL)
+        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $SDK_URL)
         # Upload base only
         cd ~/sdk/bin/packages/*/base
         git init
@@ -178,7 +178,7 @@ jobs:
       if: matrix.INCLUDE_FILES
       run: |
         IB_HOME=$(basename $IB_URL|head -c -8)
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
+        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
         cd $IB_HOME
         mkdir -p files/root/
         mkdir -p files/etc/opkg/
@@ -193,7 +193,7 @@ jobs:
         ROOTFS_PARTSIZE: ${{ matrix.ROOTFS_PARTSIZE }}
       run: |
         IB_HOME=$(basename $IB_URL|head -c -8)
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
+        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
         cd $IB_HOME
         sed -i "/check_signature/d" repositories.conf
         echo "src/gz brainiac https://github.com/fangguangyang/openwrt-dist/raw/$TAG" >> repositories.conf
@@ -210,7 +210,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
         IB_HOME=$(basename $IB_URL|head -c -8)
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
+        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
         # Prepare Release
         ARTIFACTPATH="$(pwd)/image"
         mkdir -p $ARTIFACTPATH
