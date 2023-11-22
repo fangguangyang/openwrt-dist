@@ -48,9 +48,11 @@ jobs:
         git clone --depth 1 -b master https://github.com/aa65535/openwrt-simple-obfs package/simple-obfs
         # passwall
         pushd /tmp
-        git clone --depth 1 -b master https://github.com/xiaorouji/openwrt-passwall
+        git clone --depth 1 -b main https://github.com/xiaorouji/openwrt-passwall
         mv openwrt-passwall/luci-app-passwall ~/sdk/package/luci-app-passwall
         popd
+        # luci-theme-argon
+        git clone --depth 1 -b master https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
         # Misc
         git clone --depth 1 -b master https://github.com/aa65535/openwrt-chinadns package/chinadns
         git clone --depth 1 -b master https://github.com/aa65535/openwrt-dns-forwarder package/dns-forwarder
