@@ -210,7 +210,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
         IB_HOME=$(basename $IB_URL|head -c -8)
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
+        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
         # Prepare Release
         ARTIFACTPATH="$(pwd)/image"
         mkdir -p $ARTIFACTPATH
