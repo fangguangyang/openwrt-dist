@@ -84,8 +84,8 @@ jobs:
         # some packages
         pushd /tmp
         git clone --depth 1 -b master https://github.com/kenzok8/small
-        for subdir in small/*; do [ -d "$subdir" ] && [ ! -d "~/sdk/package/$(basename "$subdir")" ] && cp -r "$subdir" "~/sdk/package/"; done
         popd
+        for subdir in /tmp/small/*; do [ -d "$subdir" ] && [ ! -d ".package/$(basename "$subdir")" ] && cp -r "$subdir" ./package/; done
         # Dependency
         #git clone -b master https://github.com/shadowsocks/openwrt-feeds package/custom
         pushd package/openwrt-dist-luci/tools/po2lmo ; make && sudo make install ; popd
