@@ -29,7 +29,7 @@ jobs:
         large-packages: false
     - uses: actions/checkout@main
     - name: Env for Openwrt SDK
-      run: sudo apt update && sudo apt install -y libev-dev libc-ares-dev libudns-dev libncurses-dev libfuse-dev
+      run: sudo apt update && sudo apt install -y libev-dev libc-ares-dev libudns-dev libncurses-dev libfuse-dev libudns-dev
     - name: Download Openwrt SDK
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
@@ -97,7 +97,7 @@ jobs:
         #git clone -b master https://github.com/shadowsocks/openwrt-feeds package/custom
         pushd package/openwrt-dist-luci/tools/po2lmo ; make && sudo make install ; popd
         ./scripts/feeds update -a
-        ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6 libudns-dev
+        ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
     - name: Compile
       run: |
         cd ~/sdk
