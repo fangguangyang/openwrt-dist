@@ -95,7 +95,7 @@ jobs:
         ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
         cd ~/sdk
         make defconfig
-        make download -j4
+        make download V=s
     - name: Compile
       run: |
         cd ~/sdk
