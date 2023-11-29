@@ -96,11 +96,11 @@ jobs:
         ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
         cd ~/sdk
         make defconfig
-        make download V=s
+        make download
     - name: Compile
       run: |
         cd ~/sdk
-        make -j2
+        make -j 2 V=s 2>&1 | tee build.log | grep -i error
     - name: Upload
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
