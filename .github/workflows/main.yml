@@ -92,13 +92,14 @@ jobs:
         sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
         sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
         ./scripts/feeds update -a
-        ./scripts/feeds install -a #golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
+        ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
+        cd ~/sdk
+        make defconfig
+        make download -j4
     - name: Compile
       run: |
         cd ~/sdk
-        make defconfig
-        # Edit config
-        make V=s
+        make -j2
     - name: Upload
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
