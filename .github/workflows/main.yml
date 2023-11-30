@@ -102,7 +102,7 @@ jobs:
       run: |
         cd ~/sdk
         #IGNORE_ERRORS=1 
-        make -j 4 V=w
+        make -j 2 V=w
     - name: Upload
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
