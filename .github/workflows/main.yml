@@ -94,16 +94,15 @@ jobs:
         sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
-        pushd feeds/packages/lang
-        rm -rf golang && svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang
-        popd
         cd ~/sdk
         make defconfig
         make download
+        pushd feeds/packages/lang ; rm -rf golang && svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang ; popd
     - name: Compile
       run: |
         cd ~/sdk
-        IGNORE_ERRORS=1 make -j 4 V=w
+        #IGNORE_ERRORS=1 
+        make -j 4 V=w
     - name: Upload
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
