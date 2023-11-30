@@ -90,7 +90,7 @@ jobs:
         # Dependency
         #git clone -b master https://github.com/shadowsocks/openwrt-feeds package/custom
         pushd package/openwrt-dist-luci/tools/po2lmo ; make && sudo make install ; popd
-        sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+        #sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
         sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install golang c-ares libev libudns libopenssl libsodium mbedtls pcre libncursesw6 boost-program_options
@@ -101,8 +101,7 @@ jobs:
     - name: Compile
       run: |
         cd ~/sdk
-        #IGNORE_ERRORS=1 
-        make -j 2 V=w
+        IGNORE_ERRORS=1 make -j 2 V=w
     - name: Upload
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
