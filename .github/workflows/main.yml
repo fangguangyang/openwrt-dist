@@ -94,12 +94,8 @@ jobs:
         sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
         ./scripts/feeds update -a
         ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6
-        pushd /tmp
-        wget https://go.dev/dl/go1.21.4.linux-amd64.tar.gz
-        sudo rm -rf /usr/local/go
-        sudo tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz
-        export PATH=$PATH:/usr/local/go/bin
-        go version
+        pushd feeds/packages/lang
+        rm -rf golang && svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang
         popd
         cd ~/sdk
         make defconfig
