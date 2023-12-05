@@ -51,7 +51,7 @@ jobs:
         make defconfig
         make download -j2
         pushd /tmp ; git clone --depth 1 -b master  https://github.com/openwrt/packages ; popd 
-        pushd feeds/packages/lang ; rm -rf golang && cp /tmp/packages/lang/golang -r ; popd
+        pushd feeds/packages/lang ; rm -rf golang && cp /tmp/packages/lang/golang -r ./ ; popd
         IGNORE_ERRORS=1 make -j2
     - name: Download Custom Packages and Compile
       run: |
