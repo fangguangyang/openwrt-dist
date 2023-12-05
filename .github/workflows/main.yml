@@ -50,7 +50,8 @@ jobs:
         ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6 libudns boost-program_options
         make defconfig
         make download -j2
-        pushd feeds/packages/lang ; rm -rf golang && svn co https://github.com/openwrt/packages/branches/openwrt-23.05/lang/golang ; popd
+        pushd /temp ; git clone --depth 1 -b master  https://github.com/openwrt/packages ; popd 
+        pushd feeds/packages/lang ; rm -rf golang && cp /tmp/packages/lang/golang -r ; popd
         IGNORE_ERRORS=1 make -j2
     - name: Download Custom Packages and Compile
       run: |
