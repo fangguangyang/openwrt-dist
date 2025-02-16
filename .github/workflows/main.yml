@@ -29,14 +29,14 @@ jobs:
         large-packages: false
     - uses: actions/checkout@main
     - name: Env for Openwrt SDK
-      run: sudo apt update && sudo apt install -y libev-dev libc-ares-dev libudns-dev libncurses-dev libfuse-dev
+      run: sudo apt update && sudo apt install -y libev-dev libc-ares-dev libudns-dev libncurses-dev libfuse-dev zstd
     - name: Download Openwrt SDK
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
       run: |
         SDK_HOME=$(head -c -8 <<< $(basename $SDK_URL))
-        wget $SDK_URL
-        tar --use-compress-program=unzstd xf $(basename $SDK_URL) -C ~/
+        wget -q $SDK_URL
+        tar -I zstd xf $(basename $SDK_URL) -C ~/
         mv ~/$SDK_HOME ~/sdk
         cp key-build ~/sdk/
     - name: Download Dependency Packages and Compile
