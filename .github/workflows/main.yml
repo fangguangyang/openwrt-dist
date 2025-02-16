@@ -21,7 +21,7 @@ jobs:
         # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/generic/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ath79-generic_gcc-12.3.0_musl.Linux-x86_64.tar.xz
         # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/nand/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ath79-nand_gcc-12.3.0_musl.Linux-x86_64.tar.xz
         # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/rockchip/armv8/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64.tar.xz
-        - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
+        - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.xz
     steps:
     - name: Free Disk Space
       uses: jlumbroso/free-disk-space@main
