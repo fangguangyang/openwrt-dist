@@ -124,7 +124,7 @@ jobs:
       matrix:
         include:
           - PROFILE: generic.x86_64
-            IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-x86-64.Linux-x86_64.tar.xz
+            IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-x86-64.Linux-x86_64.tar.zst
             PACKAGES: ca-bundle ca-certificates block-mount usbutils coreutils coreutils-base64 curl iperf3 ip-full kmod-ipt-tproxy kmod-nft-tproxy ebtables kmod-ebtables-ipv6
             INCLUDE_FILES: false
             ROOTFS_PARTSIZE: 4000
@@ -181,14 +181,14 @@ jobs:
       env:
         IB_URL: ${{ matrix.IB_URL }}
       run: |
-        wget $IB_URL
-        tar xf $(basename $IB_URL)
+        wget -q $IB_URL
+        tar -xaf $(basename $IB_URL)
     - name: Fetch Files
       env:
         IB_URL: ${{ matrix.IB_URL }}
       if: matrix.INCLUDE_FILES
       run: |
-        IB_HOME=$(basename $IB_URL|head -c -8)
+        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
         TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
         cd $IB_HOME
         mkdir -p files/root/
@@ -203,7 +203,7 @@ jobs:
         PACKAGES: ${{ matrix.PACKAGES }}
         ROOTFS_PARTSIZE: ${{ matrix.ROOTFS_PARTSIZE }}
       run: |
-        IB_HOME=$(basename $IB_URL|head -c -8)
+        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
         TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
         cd $IB_HOME
         sed -i "/check_signature/d" repositories.conf
@@ -220,7 +220,7 @@ jobs:
         IB_URL: ${{ matrix.IB_URL }}
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
-        IB_HOME=$(basename $IB_URL|head -c -8)
+        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
         TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
         # Prepare Release
         ARTIFACTPATH="$(pwd)/image"
