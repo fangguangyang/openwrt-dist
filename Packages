@@ -1,0 +1,2286 @@
+Package: ChinaDNS
+Version: 1.3.3-r1
+Depends: libc
+License: GPLv3
+Section: net
+URL: https://github.com/shadowsocks/ChinaDNS
+Architecture: x86_64
+Installed-Size: 163840
+Filename: ChinaDNS_1.3.3-r1_x86_64.ipk
+Size: 35772
+SHA256sum: b187ef645380ce0a1fe768a2aa77d4c969bb2c19df2dc85013c179ad43f51da4
+Description:  Protect yourself against DNS poisoning in China.
+
+Package: agetty
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 81920
+Filename: agetty_2.40.2-r1_x86_64.ipk
+Size: 34241
+SHA256sum: b84c1c45694f5863f738fb0d9c89a20851f9fad79968a3675bad5765fb7a9206
+Description:  agetty opens a tty port, prompts for a login name and invokes the
+ /bin/login command
+
+Package: alist
+Version: 3.42.0-r1
+Depends: libc, ca-bundle
+License: GPL-3.0
+Section: net
+URL: http://www.alistgo.com
+Architecture: x86_64
+Installed-Size: 83558400
+Filename: alist_3.42.0-r1_x86_64.ipk
+Size: 30485845
+SHA256sum: d662b203837da5ffaf61cd98b21580e0b5467a59ea51bfdd5eea041d70461ed5
+Description:  A file list program that supports multiple storage, powered by Gin and Solidjs.
+
+Package: blkdiscard
+Version: 2.40.2-r1
+Depends: libc, libblkid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: blkdiscard_2.40.2-r1_x86_64.ipk
+Size: 11638
+SHA256sum: c587fb5664045b2d53c17ec4c25de2761ad6f92263013fbe4fec845e9e8e3486
+Description:  The blkdiscard is used to discard device sectors. This is useful for
+ solid-state drivers (SSDs) and thinly-provisioned storage. Unlike fstrim,
+ this command is used directly on the block device.
+
+Package: blkid
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libuuid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 122880
+Filename: blkid_2.40.2-r1_x86_64.ipk
+Size: 49469
+SHA256sum: 4ef54783f7445463ed27205970b6759f8687cc443c031a4462fe85ecfa6ad228
+Description:  The blkid program is the command-line interface to working with the libblkid
+ library.
+
+Package: blockdev
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 81920
+Filename: blockdev_2.40.2-r1_x86_64.ipk
+Size: 31215
+SHA256sum: 6663a761896fff6254c9cf013eaa228a76261d50f65bb36512c3f2923d2ae7cb
+Description:  The blockdev program is the command-line interface to call block device ioctls.
+
+Package: brook
+Version: 20250202-r1
+Depends: libc, ca-bundle
+License: GPL-3.0
+Section: net
+URL: https://github.com/txthinking/brook
+Architecture: x86_64
+Installed-Size: 20633600
+Filename: brook_20250202-r1_x86_64.ipk
+Size: 7933544
+SHA256sum: 08c62d1bd71ef686e26ee4868588c9681f2a4af0da270bc262160b96045d197d
+Description:  Brook is a cross-platform strong encryption and not detectable proxy.
+ Zero-Configuration.
+
+Package: bzip2
+Version: 1.0.8-r1
+Depends: libc, libbz2-1.0
+License: bzip2-1.0.8
+Section: utils
+URL: https://sourceware.org/bzip2/
+CPE-ID: cpe:/a:bzip:bzip2
+Architecture: x86_64
+Installed-Size: 40960
+Filename: bzip2_1.0.8-r1_x86_64.ipk
+Size: 12538
+SHA256sum: 2329f7c12df5aba7e032bca2c9e01acb483036a0a8208f73fa95f789ba0e8d56
+Description:  bzip2 is a freely available, patent free, high-quality
+ data compressor. This package provides the binary.
+
+Package: ca-bundle
+Version: 20240203-r1
+Depends: libc
+Provides: ca-certs
+License: GPL-2.0-or-later MPL-2.0
+Section: base
+Architecture: all
+Installed-Size: 225280
+Filename: ca-bundle_20240203-r1_all.ipk
+Size: 128168
+SHA256sum: 59c938e526a37aba3fa8e84c10ed2386f765170c72f3be3567d361bba72eff12
+Description:  System CA certificates as a bundle
+
+Package: ca-certificates
+Version: 20240203-r1
+Depends: libc
+Provides: ca-certs
+License: GPL-2.0-or-later MPL-2.0
+Section: base
+Architecture: all
+Installed-Size: 409600
+Filename: ca-certificates_20240203-r1_all.ipk
+Size: 139160
+SHA256sum: 56cfa687b5b32a1acf04f36f8ff4c4e43d9ce428cd02dd0c99bbeba895b70bb5
+Description:  System CA certificates
+
+Package: cal
+Version: 2.40.2-r1
+Depends: libc, libncurses6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 61440
+Filename: cal_2.40.2-r1_x86_64.ipk
+Size: 25309
+SHA256sum: ca9872e24527e0946478f04aa27b278a71be50aa7709ec256c12afdf9024d874
+Description:  cal displays a simple calendar
+
+Package: cfdisk
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libncurses6, libsmartcols1, libfdisk1, libmount1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 92160
+Filename: cfdisk_2.40.2-r1_x86_64.ipk
+Size: 37694
+SHA256sum: b83f33348c8dbd4c1c86a09515c55975d767a8077d93bfc446fdc61157f0c65a
+Description:  cfdisk is a curses-based program for partitioning any hard disk drive
+
+Package: chinadns-ng
+Version: 2024.12.22-r1
+Depends: libc, ipset
+License: AGPL-3.0-only
+Section: net
+URL: https://github.com/zfl9/chinadns-ng
+Architecture: x86_64
+Installed-Size: 583680
+Filename: chinadns-ng_2024.12.22-r1_x86_64.ipk
+Size: 273255
+SHA256sum: ffd59044efed3ba119e8308033b3b89678d33be4f6ed2bbb5bbb190b08a52cf0
+Description:  ChinaDNS next generation, refactoring with epoll and ipset.
+
+Package: colrm
+Version: 2.40.2-r1
+Depends: libc
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 30720
+Filename: colrm_2.40.2-r1_x86_64.ipk
+Size: 9420
+SHA256sum: 1dfb886fb05825b9ef2722dd3d848fc12f319d3cd753f82cf6e5929604cf0bb9
+Description:  colrm removes selected columns from a file. Input is taken from
+ standard input. Output is sent to standard output.
+
+Package: dmesg
+Version: 2.40.2-r1
+Depends: libc, libncursesw6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 71680
+Filename: dmesg_2.40.2-r1_x86_64.ipk
+Size: 29493
+SHA256sum: 6be4be6a1adaa48a34103c429a6c37481e9c97e08ad760538d77e6161a7a7193
+Description:  dmesg  is used to examine or control the kernel ring buffer
+
+Package: dns-forwarder
+Version: 1.2.1-r2
+Depends: libc
+License: GPLv3
+Section: net
+URL: https://github.com/aa65535/hev-dns-forwarder
+Architecture: x86_64
+Installed-Size: 40960
+Filename: dns-forwarder_1.2.1-r2_x86_64.ipk
+Size: 11425
+SHA256sum: 3bd31b6b2030097df7531f91a579b491e8e650c7c789fa466560c6a29a2d668b
+Description:  Forwarding DNS queries on TCP transport.
+
+Package: dns2socks
+Version: 2.1-r2
+Depends: libc, libpthread
+License: BSD-3-Clause
+Section: net
+URL: http://dns2socks.sourceforge.net/
+Architecture: x86_64
+Installed-Size: 40960
+Filename: dns2socks_2.1-r2_x86_64.ipk
+Size: 11130
+SHA256sum: c209e6275044b4793c57febb3ff84791625089f74bd58f677fe5662b17be88c3
+Description:  This is a command line utility to resolve DNS requests via
+ a SOCKS tunnel like Tor or a HTTP proxy.
+
+Package: dns2tcp
+Version: 1.1.2-r2
+Depends: libc
+License: AGPL-3.0-only
+Section: net
+URL: https://github.com/zfl9/dns2tcp
+Architecture: x86_64
+Installed-Size: 40960
+Filename: dns2tcp_1.1.2-r2_x86_64.ipk
+Size: 11096
+SHA256sum: 2650fcce61cb1bfd0515cd8d49cea507781aa1bfb6ee8f4dbff5dc0fdaa8c4ed
+Description:  utility to convert dns query from udp to tcp
+
+Package: eject
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libmount1, libuuid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 81920
+Filename: eject_2.40.2-r1_x86_64.ipk
+Size: 32700
+SHA256sum: b2efa453be9f4b0ff014eb7370eab6910d6de5892b9f2a2598e0c8be419fed14
+Description:  eject allows removable media (typically a CD-ROM, floppy disk, tape, or JAZ
+ or ZIP disk) to be ejected under software control.
+
+Package: fdisk
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libsmartcols1, libfdisk1, libncursesw6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 143360
+Filename: fdisk_2.40.2-r1_x86_64.ipk
+Size: 56579
+SHA256sum: bf6c6e5cc57abd3d62e7868e24c703db419f12d19f299fe4d8be5c57976b29e5
+Description:  a menu-driven program for creation and manipulation of partition tables
+
+Package: findfs
+Version: 2.40.2-r1
+Depends: libc, libblkid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 20480
+Filename: findfs_2.40.2-r1_x86_64.ipk
+Size: 3190
+SHA256sum: c1e19ddf02f319216aef49f83f51c4df2c27aca4870cfca4c25978e036f3d26c
+Description:  findfs will search the disks in the system looking for a filesystem which has
+ a label matching label or a UUID equal to uuid
+
+Package: flock
+Version: 2.40.2-r1
+Depends: libc, librt
+Alternatives: 200:/usr/bin/flock:/usr/bin/util-linux-flock
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: flock_2.40.2-r1_x86_64.ipk
+Size: 11944
+SHA256sum: 9f82b5f74e35adc859623654f9ffd4c8f38f7918bed2d76424fce89ba4e701a8
+Description:  manages flock locks from within shell scripts or the command line
+
+Package: fstrim
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libuuid1, libsmartcols1, libmount1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 81920
+Filename: fstrim_2.40.2-r1_x86_64.ipk
+Size: 30771
+SHA256sum: 1af5429216c9c0c68373517686ca5b1304f442a6aad2fcacf270400e4539ced6
+Description:  fstrim is used on a mounted filesystem to discard (or "trim") blocks
+ which are not in use by the filesystem.  This is useful for solid-
+ state drives (SSDs) and thinly-provisioned storage.
+
+Package: geoview
+Version: 0.1.2-r1
+Depends: libc
+License: Apache-2.0
+Section: net
+URL: https://github.com/snowie2000/geoview
+Architecture: x86_64
+Installed-Size: 5632000
+Filename: geoview_0.1.2-r1_x86_64.ipk
+Size: 2313925
+SHA256sum: 41bd1feec8d798c62c67829c34244c9b1176f80b3686b6da9d004533670aff8b
+Description:  geoview is a handy tool to extract useful information from geo* files.
+ 
+ This package contains the geoview.
+
+Package: getopt
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: getopt_2.40.2-r1_x86_64.ipk
+Size: 11291
+SHA256sum: 111ac7e0d875fc141fd6c214691f98f7bb82a0bd8efa021a7b129f9b0fad110f
+Description:  getopt is used to break up (parse) options in command lines for easy parsing
+ by shell procedures, and to check for legal options
+
+Package: hwclock
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 92160
+Filename: hwclock_2.40.2-r1_x86_64.ipk
+Size: 38334
+SHA256sum: d8c90eecc3edceefef8921c0e162cb887debb64a919fddb536e06efafc4ad657
+Description:  hwclock is a tool for accessing the Hardware Clock
+
+Package: hysteria
+Version: 2.6.1-r1
+Depends: libc, ca-bundle
+License: MIT
+Section: net
+URL: https://github.com/tobyxdd/hysteria
+Architecture: x86_64
+Installed-Size: 18913280
+Filename: hysteria_2.6.1-r1_x86_64.ipk
+Size: 7187866
+SHA256sum: 50b2587044d9c6d3ced47ca38807051f23e3da8cccf051de85a8cc43dfe931e5
+Description:  Hysteria is a feature-packed network utility optimized for networks
+ of poor quality (e.g. satellite connections, congested public Wi-Fi,
+ connecting from China to servers abroad) powered by a custom version
+ of QUIC protocol.
+
+Package: iconv
+Version: 1.17-r1
+Depends: libc, libiconv-full2, libcharset1
+License: LGPL-2.1-or-later
+Section: utils
+URL: https://www.gnu.org/software/libiconv/
+Architecture: x86_64
+Installed-Size: 40960
+Filename: iconv_1.17-r1_x86_64.ipk
+Size: 13016
+SHA256sum: 280f2201dd0945006f67712c647941d4cff747c1ca37ce022338361c29a36b14
+Description:  Character set conversion utility
+
+Package: ipcs
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 61440
+Filename: ipcs_2.40.2-r1_x86_64.ipk
+Size: 25427
+SHA256sum: 3b0853113ccea22a8fce444858133244bbb84edc1c79f1cf142e4588dbee2940
+Description:  ipcs shows information on the inter-process communication facilities for
+ which the calling process has read access. By default it shows information
+ about all three resources: shared memory segments, message queues, and
+ semaphore arrays.
+
+Package: ipt2socks
+Version: 1.1.4-r3
+Depends: libc, libpthread
+License: AGPL-3.0
+Section: net
+URL: https://github.com/zfl9/ipt2socks
+Architecture: x86_64
+Installed-Size: 81920
+Filename: ipt2socks_1.1.4-r3_x86_64.ipk
+Size: 27259
+SHA256sum: 83997fd63886853424d617b6e5bb03f4ec332321a62161e138ff8b4629e85dd0
+Description:  Utility for converting iptables (redirect/tproxy) to socks5.
+
+Package: libblkid1
+Version: 2.40.2-r1
+Depends: libc, libuuid1
+Provides: libblkid
+License: GPL-2.0-only
+Section: libs
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 256000
+Filename: libblkid1_2.40.2-r1_x86_64.ipk
+Size: 115279
+SHA256sum: db693b3c0996645e264623832ac9bf5bd2d5f0c5a58e429137da1330d06f075d
+Description:  The libblkid library is used to identify block devices (disks) as to their
+ content (e.g. filesystem type, partitions) as well as extracting additional
+ information such as filesystem labels/volume names, partitions, unique
+ identifiers/serial numbers...
+
+Package: libbz2-1.0
+Version: 1.0.8-r1
+Depends: libc
+Provides: libbz2
+License: bzip2-1.0.8
+Section: libs
+URL: https://sourceware.org/bzip2/
+ABIVersion: -1.0
+CPE-ID: cpe:/a:bzip:bzip2
+Architecture: x86_64
+Installed-Size: 61440
+Filename: libbz2-1.0_1.0.8-r1_x86_64.ipk
+Size: 24833
+SHA256sum: 55d1100e17593d12228dc4c873cc1549c9cf73fae55bebda0373ca867c3ac9cf
+Description:  bzip2 is a freely available, patent free, high-quality
+ data compressor. This packages provides libbz2 library.
+
+Package: libcharset1
+Version: 1.17-r1
+Depends: libc
+Provides: libcharset
+License: LGPL-2.1-or-later
+Section: libs
+URL: https://www.gnu.org/software/libiconv/
+ABIVersion: 1
+Architecture: x86_64
+Installed-Size: 20480
+Filename: libcharset1_1.17-r1_x86_64.ipk
+Size: 1841
+SHA256sum: bad22ceba58638dea066eebbf04ec5135082f99eb495c40b2de17f4873c3e8d5
+Description:  Character set conversion library
+
+Package: libfdisk1
+Version: 2.40.2-r1
+Depends: libc, libuuid1, libblkid1
+Provides: libfdisk
+License: GPL-2.0-only
+Section: libs
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 358400
+Filename: libfdisk1_2.40.2-r1_x86_64.ipk
+Size: 152299
+SHA256sum: d93defa12e70560a3b4e71e85d798b726b8c61b7c9b0be8bd3e7172e9dd1ed68
+Description:  The libfdisk library is used for manipulating with partition tables.
+
+Package: libiconv-full2
+Version: 1.17-r1
+Depends: libc
+Provides: libiconv-full
+License: LGPL-2.1-or-later
+Section: libs
+URL: https://www.gnu.org/software/libiconv/
+ABIVersion: 2
+Architecture: x86_64
+Installed-Size: 921600
+Filename: libiconv-full2_1.17-r1_x86_64.ipk
+Size: 666876
+SHA256sum: 5e17fb59162e77cf036cbeae5860a62584bc418af3fe3757f2474dc4c8b3f886
+Description:  Character set conversion library
+
+Package: libintl-full8
+Version: 0.22.5-r1
+Depends: libc
+Provides: libintl-full
+License: GPL-3.0-or-later
+Section: libs
+URL: http://www.gnu.org/software/gettext/
+ABIVersion: 8
+CPE-ID: cpe:/a:gnu:gettext
+Architecture: x86_64
+Installed-Size: 81920
+Filename: libintl-full8_0.22.5-r1_x86_64.ipk
+Size: 32767
+SHA256sum: fc0652e29ea6cbeae203f50938d9709023347ec7ef2ad935e47f068dc21e51c0
+Description:  GNU Internationalization library
+
+Package: libmbedtls21
+Version: 3.6.2-r1
+Depends: libc
+Provides: libmbedtls
+License: GPL-2.0-or-later
+Section: libs
+URL: https://www.trustedfirmware.org/projects/mbed-tls/
+ABIVersion: 21
+CPE-ID: cpe:/a:arm:mbed_tls
+Architecture: x86_64
+Installed-Size: 686080
+Filename: libmbedtls21_3.6.2-r1_x86_64.ipk
+Size: 309118
+SHA256sum: 4f45dfaa6bbac0b7f2be2609cabe7e51a8cc20a11d08982f477ee0e9aad101d1
+Description:  The aim of the mbedtls project is to provide a quality, open-source
+ cryptographic library written in C and targeted at embedded systems.
+ This package contains the mbedtls library.
+
+Package: libmount1
+Version: 2.40.2-r1
+Depends: libc, libblkid1
+Provides: libmount
+License: GPL-2.0-only
+Section: libs
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 337920
+Filename: libmount1_2.40.2-r1_x86_64.ipk
+Size: 149484
+SHA256sum: 34f22c481f9425113e6ae012ba249e3a56a8962d5ef5e81c107b74c48e767632
+Description:  The libmount library is used to parse /etc/fstab, /etc/mtab and
+ /proc/self/mountinfo files, manage the mtab file, evaluate mount options...
+
+Package: libncurses-dev
+Version: 6.4-r2
+Depends: libc, zlib
+License: MIT
+Section: devel
+CPE-ID: cpe:/a:gnu:ncurses
+Architecture: x86_64
+Installed-Size: 1105920
+Filename: libncurses-dev_6.4-r2_x86_64.ipk
+Size: 269270
+SHA256sum: 0e8899e183a989a623831127fb473c92db57ce2c27dc63637c121ca35dbdb5a9
+Description:  Development files for the ncurses library
+
+Package: libncurses6
+Version: 6.4-r2
+Depends: libc, terminfo
+Provides: libncursesw, libncurses, libncursesw6
+License: MIT
+Section: libs
+URL: http://www.gnu.org/software/ncurses/
+ABIVersion: 6
+CPE-ID: cpe:/a:gnu:ncurses
+Architecture: x86_64
+Installed-Size: 450560
+Filename: libncurses6_6.4-r2_x86_64.ipk
+Size: 181355
+SHA256sum: 55cd5c252579b0d96656efe840222f70a6fd92532067e470d9c060d642a4577e
+Description:  Terminal handling library (Unicode)
+
+Package: libopenssl-afalg
+Version: 3.0.15-r1
+Depends: libc, libopenssl3, libopenssl-conf, kmod-crypto-user
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 30720
+Filename: libopenssl-afalg_3.0.15-r1_x86_64.ipk
+Size: 7976
+SHA256sum: 2ff86ba652dc7f16697fd4b72bd6bf071cb124fe0bbe2a0699d916a50f7dcb30
+Description:  This package adds an engine that enables hardware acceleration
+ through the AF_ALG kernel interface.
+ See https://www.openssl.org/docs/man3.0/man5/config.html#Engine-Configuration
+ and https://openwrt.org/docs/techref/hardware/cryptographic.hardware.accelerators
+ The engine_id is "afalg"
+
+Package: libopenssl-conf
+Version: 3.0.15-r1
+Depends: libc, libopenssl3
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 20480
+Filename: libopenssl-conf_3.0.15-r1_x86_64.ipk
+Size: 6489
+SHA256sum: b0fa6d679f3e7c412a63d5de5ffba97ca19b82969ab946cee3c8e4b6d3a8ba91
+Description:  The OpenSSL Project is a collaborative effort to develop a robust,
+ commercial-grade, full-featured, and Open Source toolkit implementing the
+ Transport Layer Security (TLS) protocol as well as a full-strength
+ general-purpose cryptography library.
+ This package installs the OpenSSL configuration file /etc/ssl/openssl.cnf.
+
+Package: libopenssl-devcrypto
+Version: 3.0.15-r1
+Depends: libc, libopenssl3, libopenssl-conf, kmod-cryptodev
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 40960
+Filename: libopenssl-devcrypto_3.0.15-r1_x86_64.ipk
+Size: 12488
+SHA256sum: de4b728c28754f5eba5338c0b07e303e85359ae0dcbd3c603d365ea566242c81
+Description:  This package adds an engine that enables hardware acceleration
+ through the /dev/crypto kernel interface.
+ See https://www.openssl.org/docs/man3.0/man5/config.html#Engine-Configuration
+ and https://openwrt.org/docs/techref/hardware/cryptographic.hardware.accelerators
+ The engine_id is "devcrypto"
+
+Package: libopenssl-legacy
+Version: 3.0.15-r1
+Depends: libc, libopenssl3, libopenssl-conf
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 133120
+Filename: libopenssl-legacy_3.0.15-r1_x86_64.ipk
+Size: 38525
+SHA256sum: 42f7bdb9d41a18c99e2914d8878f897c6299f592e1d4c535aa6b8ca7732f3703
+Description:  The OpenSSL legacy provider supplies OpenSSL implementations of algorithms that
+ have been deemed legacy. Such algorithms have commonly fallen out of use, have
+ been deemed insecure by the cryptography community, or something similar.  See
+ https://www.openssl.org/docs/man3.0/man7/OSSL_PROVIDER-legacy.html
+
+Package: libopenssl-padlock
+Version: 3.0.15-r1
+Depends: libc, libopenssl3, libopenssl-conf, kmod-crypto-hw-padlock
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 40960
+Filename: libopenssl-padlock_3.0.15-r1_x86_64.ipk
+Size: 11338
+SHA256sum: 159ef86d08be8242dc3d7f5087bbe3f951f6a2e35d495c14591d88d5b4e0cca5
+Description:  This package adds an engine that enables VIA Padlock hardware acceleration.
+ See https://www.openssl.org/docs/man3.0/man5/config.html#Engine-Configuration
+ and https://openwrt.org/docs/techref/hardware/cryptographic.hardware.accelerators
+ The engine_id is "padlock"
+
+Package: libopenssl3
+Version: 3.0.15-r1
+Depends: libc
+Provides: libopenssl
+License: Apache-2.0
+Section: libs
+URL: https://www.openssl.org/
+ABIVersion: 3
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 5099520
+Filename: libopenssl3_3.0.15-r1_x86_64.ipk
+Size: 2096810
+SHA256sum: 38c91019570401f774e0f55c950264b13f658f6688696615ed71f558a5369838
+Description:  The OpenSSL Project is a collaborative effort to develop a robust,
+ commercial-grade, full-featured, and Open Source toolkit implementing the
+ Transport Layer Security (TLS) protocol as well as a full-strength
+ general-purpose cryptography library.
+ This package contains the OpenSSL shared libraries, needed by other programs.
+
+Package: libpcre2-16
+Version: 10.42-r1
+Depends: libc
+License: BSD-3-Clause
+Section: libs
+URL: https://www.pcre.org/
+CPE-ID: cpe:/a:pcre:pcre2
+Architecture: x86_64
+Installed-Size: 460800
+Filename: libpcre2-16_10.42-r1_x86_64.ipk
+Size: 172457
+SHA256sum: 919b8e6c4e08fc05d548bc22745a528a51c01c5e5278db14158f789abb04639a
+Description:  A Perl Compatible Regular Expression library (16bit support)
+
+Package: libpcre2-32
+Version: 10.42-r1
+Depends: libc
+License: BSD-3-Clause
+Section: libs
+URL: https://www.pcre.org/
+CPE-ID: cpe:/a:pcre:pcre2
+Architecture: x86_64
+Installed-Size: 430080
+Filename: libpcre2-32_10.42-r1_x86_64.ipk
+Size: 162883
+SHA256sum: ddf5f490e1c5d5b90988edd0d801a0cee7d77a6924630ff3d5a9b2f158d523f6
+Description:  A Perl Compatible Regular Expression library (32bit support)
+
+Package: libpcre2
+Version: 10.42-r1
+Depends: libc
+License: BSD-3-Clause
+Section: libs
+URL: https://www.pcre.org/
+CPE-ID: cpe:/a:pcre:pcre2
+Architecture: x86_64
+Installed-Size: 512000
+Filename: libpcre2_10.42-r1_x86_64.ipk
+Size: 188707
+SHA256sum: a46620d240f631da9db9ad3fa34620c82d9d0a8c34f06c5e0b244de6cfefc62a
+Description:  A Perl Compatible Regular Expression library
+
+Package: libreadline8
+Version: 8.2-r2
+Depends: libc, libncursesw6
+Provides: libreadline
+License: GPL-3.0-or-later
+Section: libs
+URL: http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+ABIVersion: 8
+CPE-ID: cpe:/a:gnu:readline
+Architecture: x86_64
+Installed-Size: 348160
+Filename: libreadline8_8.2-r2_x86_64.ipk
+Size: 136059
+SHA256sum: e14fd9f47d733b723947285eb9d6ab91d67e81bcad71d526940d02db0236960f
+Description:  The Readline library provides a set of functions for use by applications
+ that allow users to edit command lines as they are typed in. Both Emacs
+ and vi editing modes are available. The Readline library includes
+ additional functions to maintain a list of previously-entered command
+ lines, to recall and perhaps reedit those lines, and perform csh-like
+ history expansion on previous commands.
+
+Package: libsmartcols1
+Version: 2.40.2-r1
+Depends: libc, librt
+Provides: libsmartcols
+License: GPL-2.0-only
+Section: libs
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 143360
+Filename: libsmartcols1_2.40.2-r1_x86_64.ipk
+Size: 62010
+SHA256sum: 962cb521e9b61b82de27956a97b305db40906c649201b53aa5a286098cdfadfd
+Description:  The smartcols library is used to print tables and trees in a pretty way.
+
+Package: libunistring
+Version: 1.2-r1
+Depends: libc
+License: GPL-3.0
+Section: libs
+URL: https://www.gnu.org/software/libunistring
+CPE-ID: cpe:/a:gnu:libunistring
+Architecture: x86_64
+Installed-Size: 1781760
+Filename: libunistring_1.2-r1_x86_64.ipk
+Size: 675186
+SHA256sum: 3e073a39c6132e32493255dab9e16049b1512ec4fc0e158c43bc9d4e33e2b10a
+Description:  This library provides functions for manipulating Unicode strings
+ and for manipulating C strings according to the Unicode standard.
+
+Package: libuuid1
+Version: 2.40.2-r1
+Depends: libc, librt
+Provides: libuuid
+License: GPL-2.0-only
+Section: libs
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+ABIVersion: 1
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: libuuid1_2.40.2-r1_x86_64.ipk
+Size: 13661
+SHA256sum: ed06d09526ebf145ded53e3085267b8a491b8a5c624d907ef738d9928df20bf2
+Description:  The UUID library is used to generate unique identifiers for objects
+ that may be accessible beyond the local system. This library
+ generates UUIDs compatible with those created by the Open Software
+ Foundation (OSF) Distributed Computing Environment (DCE) utility.
+
+Package: libxml2-dev
+Version: 2.13.4-r1
+Depends: libc, libxml2
+License: MIT
+Section: devel
+URL: http://xmlsoft.org/
+CPE-ID: cpe:/a:xmlsoft:libxml2
+Architecture: x86_64
+Installed-Size: 481280
+Filename: libxml2-dev_2.13.4-r1_x86_64.ipk
+Size: 86768
+SHA256sum: 9c96ac5d4e6dc1b3c8deb039f3410e82cd84ba4545b77f6ed688d03ad3264be5
+Description:  A library for manipulating XML and HTML resources.
+ 
+ This package contains the headers and xml2-config binary.
+
+Package: libxml2-utils
+Version: 2.13.4-r1
+Depends: libc, libxml2
+License: MIT
+Section: utils
+URL: http://xmlsoft.org/
+CPE-ID: cpe:/a:xmlsoft:libxml2
+Architecture: x86_64
+Installed-Size: 71680
+Filename: libxml2-utils_2.13.4-r1_x86_64.ipk
+Size: 21393
+SHA256sum: 9d3ed3126dfd14a57a707e8b7d1fe910cab8319056964a9564b0f50b8589bb71
+Description:  This package contains the binaries xmllint and xmlcatalog
+ from libxml2, a library for manipulating XML and HTML resources.
+
+Package: libxml2
+Version: 2.13.4-r1
+Depends: libc, libpthread, zlib
+License: MIT
+Section: libs
+URL: http://xmlsoft.org/
+CPE-ID: cpe:/a:xmlsoft:libxml2
+Architecture: x86_64
+Installed-Size: 1075200
+Filename: libxml2_2.13.4-r1_x86_64.ipk
+Size: 475676
+SHA256sum: 47f6df241738f723867a0f6571b3e520fed158e28c91768cfdf82bb23ef555f9
+Description:  A library for manipulating XML and HTML resources.
+
+Package: logger
+Version: 2.40.2-r1
+Depends: libc, librt
+Alternatives: 200:/usr/bin/logger:/usr/bin/util-linux-logger
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 51200
+Filename: logger_2.40.2-r1_x86_64.ipk
+Size: 17897
+SHA256sum: 790cfde8984c1ac6afb99c8b61832bfae0272c75c400bf40c1cbf1c93366c1f7
+Description:  logger makes entries in the system log, it provides a shell command interface
+ to the syslog system log module
+
+Package: look
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 20480
+Filename: look_2.40.2-r1_x86_64.ipk
+Size: 4341
+SHA256sum: 5f1b1876a8872fa66f230cf56fe8cb230a4d67628d9ef598df1941a213f0fb41
+Description:  look utility displays any lines in file which contain string
+
+Package: losetup
+Version: 2.40.2-r1
+Depends: libc, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 112640
+Filename: losetup_2.40.2-r1_x86_64.ipk
+Size: 46876
+SHA256sum: c12e8db6a26a4f617500404d9496bd6314b8183aebaad989edc21e3c0dd676f2
+Description:  losetup is used to associate loop devices with regular files or block devices,
+ to detach loop devices and to query the status of a loop device
+
+Package: lsblk
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libmount1, libsmartcols1, libncurses6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 184320
+Filename: lsblk_2.40.2-r1_x86_64.ipk
+Size: 78769
+SHA256sum: 8f7103e5b0aa0df86ed9199bf1460a840c81ffcb1605d0ef46848ef56bb1cd8f
+Description:  lsblk lists information about all or the specified block devices
+
+Package: lscpu
+Version: 2.40.2-r1
+Depends: libc, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 133120
+Filename: lscpu_2.40.2-r1_x86_64.ipk
+Size: 54363
+SHA256sum: a9222977849fc2b6cc48fc50a66e69538fac365f92a66f028837ed18e1dbfc31
+Description:  lscpu displays information about the CPU architecture
+
+Package: lslocks
+Version: 2.40.2-r1
+Depends: libc, libmount1, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 71680
+Filename: lslocks_2.40.2-r1_x86_64.ipk
+Size: 26318
+SHA256sum: 564cf95fad4b4d768eed304c1ffbca5283a0efde3a7226d48767b80b0eeab44d
+Description:  lslocks lists information about all the currently held file locks in a Linux system
+
+Package: lsns
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libmount1, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 71680
+Filename: lsns_2.40.2-r1_x86_64.ipk
+Size: 29104
+SHA256sum: dc19c8ce1c9121586f704e15322b164b5004baacb8c508fa66224460ea121939
+Description:  lsns lists information about all namespaces and their processes
+
+Package: lua-neturl
+Version: 1.2-1-r3
+Depends: libc, lua
+License: MIT
+Section: lang
+URL: https://github.com/golgote/neturl
+Architecture: all
+Installed-Size: 20480
+Filename: lua-neturl_1.2-1-r3_all.ipk
+Size: 5328
+SHA256sum: 83d9c7675fa8b101d18583d137daa5521095a0c4fd1801ad35a43c60aaf1a00c
+Description:  This small Lua library provides a few functions to parse URL with
+ querystring and build new URL easily.
+
+Package: luci-app-adguardhome
+Version: 1.8-r11
+Depends: libc, wget
+Section: luci
+Architecture: all
+Installed-Size: 317440
+Filename: luci-app-adguardhome_1.8-r11_all.ipk
+Size: 91735
+SHA256sum: 047b76a79e0644af5a7122a18a127244dec366210b05b004a63eb3e174c9791c
+Description:  LuCI support for adguardhome
+
+Package: luci-app-alist
+Version: 1.1.3-r1
+Depends: libc, alist
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-app-alist_1.1.3-r1_all.ipk
+Size: 5714
+SHA256sum: a488757a3bac8da98ef2ea2bb8d1df8473c4a990a626600cee0ae53a40aff6a5
+Description:  LuCI support for alist
+
+Package: luci-app-bypass
+Version: 0.250217.14194
+Depends: libc, ipset, kmod-ipt-nat, ip-full, iptables-mod-tproxy, lua-neturl, dnsmasq-full, smartdns, coreutils, coreutils-base64, curl, tcping, chinadns-ng, lua, luci-compat, luci-lib-ipkg, unzip, shadowsocks-libev-ss-server, shadowsocks-libev-ss-local, shadowsocks-libev-ss-redir, shadowsocksr-libev-ssr-local, shadowsocksr-libev-ssr-redir, shadowsocksr-libev-ssr-server, xray-core, trojan-plus, microsocks, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 1433600
+Filename: luci-app-bypass_0.250217.14194_all.ipk
+Size: 390061
+SHA256sum: d40cb885984f7466bab7ee34de0d26cce28de8cbfef11c1ee2f2582bf4608594
+Description:  SS/SSR/Xray/Trojan/NaiveProxy/Socks5/Tun LuCI interface
+
+Package: luci-app-chinadns
+Version: 1.6.3-r1
+Depends: libc, ChinaDNS
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-chinadns_1.6.3-r1_all.ipk
+Size: 2749
+SHA256sum: 8ad0886d5d64f9cd5ad1deb7daa546d1589396ad2475e584e32ebf639c09100a
+Description:  LuCI Support for ChinaDNS.
+
+Package: luci-app-diskman
+Version: 0.2.13-r1
+Depends: libc, luci-compat, luci-lib-ipkg, e2fsprogs, parted, smartmontools, blkid, kmod-fs-vfat, dosfstools, kmod-fs-msdos, kmod-nls-base, kmod-nls-utf8, kmod-nls-cp932, kmod-nls-cp936, kmod-nls-cp950, kmod-fs-exfat, exfat-mkfs, exfat-fsck, kmod-fs-ntfs, kmod-fs-btrfs, ntfs-3g-utils, btrfs-progs, lsblk, luci-lua-runtime
+License: AGPL-3.0
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 112640
+Filename: luci-app-diskman_0.2.13-r1_all.ipk
+Size: 21684
+SHA256sum: eb6efefeaabdab08039eefd33765ffa87b67d453ecfd02ccc40f644b435a0472
+Description:  Disk Manager interface for LuCI
+
+Package: luci-app-dns-forwarder
+Version: 1.6.3-r1
+Depends: libc, dns-forwarder
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-dns-forwarder_1.6.3-r1_all.ipk
+Size: 2442
+SHA256sum: 3e4b6a824cc593b565e5c55e714e5ef4283d0244771f3b26446fb86fd9d9e87e
+Description:  LuCI Support for Dns-Forwarder.
+
+Package: luci-app-dockerman
+Version: v0.5.26-r1
+Depends: libc, luci-compat, luci-lib-docker, luci-lib-ip, docker, dockerd, ttyd, luci-lua-runtime
+License: AGPL-3.0
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 256000
+Filename: luci-app-dockerman_v0.5.26-r1_all.ipk
+Size: 54278
+SHA256sum: 31e94d40065e4e6501f508a829e12beb6aa4497bbe88982277bb8c5dd579fbdc
+Description:  LuCI Support for docker
+
+Package: luci-app-fchomo
+Version: 0.250217.14194
+Depends: libc, mihomo, ca-bundle, firewall4, kmod-inet-diag, kmod-nft-tproxy, yq, wget-ssl, coreutils-timeout
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 593920
+Filename: luci-app-fchomo_0.250217.14194_all.ipk
+Size: 269419
+SHA256sum: 7d7facb8d5c28314d58159f2fb39f9e314b281e526ae6861f01e147bfbb53790
+Description:  FullCombo Shark! supplies maximum customization of mihomo on OpenWrt.
+
+Package: luci-app-homeproxy
+Version: 0.250217.14194
+Depends: libc, sing-box, firewall4, kmod-nft-tproxy
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 1669120
+Filename: luci-app-homeproxy_0.250217.14194_all.ipk
+Size: 513546
+SHA256sum: a8ee5d86b53118511234831db7fef05580db15042677d4b6baf57ed1995f863c
+Description:  The modern ImmortalWrt proxy platform for ARM64/AMD64
+
+Package: luci-app-mosdns
+Version: 1.5.23-r1
+Depends: libc, mosdns, jsonfilter, luci-compat, curl, v2ray-geoip, v2ray-geosite, v2dat, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 307200
+Filename: luci-app-mosdns_1.5.23-r1_all.ipk
+Size: 77029
+SHA256sum: 6b74179d6251be7123014588f136bc202fa48e62dfcfbaeee18755b93819a469
+Description:  LuCI Support for mosdns
+
+Package: luci-app-nikki
+Version: 1.17.5-r1
+Depends: libc, luci-base, nikki
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 61440
+Filename: luci-app-nikki_1.17.5-r1_all.ipk
+Size: 8958
+SHA256sum: 7cfde3fe174f66b0f9f3731039234be61c8468c0d11e5cacdfa004ad3a7a1318
+Description:  LuCI Support for nikki
+
+Package: luci-app-openclash
+Version: 0.46.075
+Depends: libc, dnsmasq-full, bash, curl, ca-bundle, ip-full, ruby, ruby-yaml, kmod-tun, unzip
+Section: opt
+Architecture: all
+Installed-Size: 23009280
+Filename: luci-app-openclash_0.46.075_all.ipk
+Size: 9220702
+SHA256sum: 6dfb30dadfbb80009a3d78debb1e2642150fdbd3b93a0e1ac4c66248a8936f01
+Description:  A LuCI support for clash
+
+Package: luci-app-passwall2
+Version: 25.1.27-r1
+Depends: libc, coreutils, coreutils-base64, coreutils-nohup, curl, ip-full, libuci-lua, lua, luci-compat, luci-lib-jsonc, resolveip, tcping, xray-core, geoview, v2ray-geoip, v2ray-geosite, unzip, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 952320
+Filename: luci-app-passwall2_25.1.27-r1_all.ipk
+Size: 247370
+SHA256sum: f01b790b4c48eab71cabfe38d91c403e2df1f03cb7ad80489d4bdaef0e1389cd
+Description:  LuCI support for PassWall 2
+
+Package: luci-app-passwall
+Version: 25.2.12-r1
+Depends: libc, coreutils, coreutils-base64, coreutils-nohup, curl, chinadns-ng, dns2socks, dnsmasq-full, ip-full, libuci-lua, lua, luci-compat, luci-lib-jsonc, microsocks, resolveip, tcping, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 2775040
+Filename: luci-app-passwall_25.2.12-r1_all.ipk
+Size: 839534
+SHA256sum: 2f7e626d39636c2647981dfcb911012da6b77baa5bb9197b0a3b6431086541cc
+Description:  LuCI support for PassWall
+
+Package: luci-app-redsocks2
+Version: 1.6.3-r1
+Depends: libc, redsocks2
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-redsocks2_1.6.3-r1_all.ipk
+Size: 2623
+SHA256sum: 47dd8c19df363600828f95daf7b151b277a832b9e8e4db98a37e38edc9437b0e
+Description:  LuCI Support for RedSocks2.
+
+Package: luci-app-shadowsocks-without-ipset
+Version: 2.1.1-r1
+Depends: iptables, wget, resolveip, libc
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 71680
+Filename: luci-app-shadowsocks-without-ipset_2.1.1-r1_all.ipk
+Size: 15028
+SHA256sum: 14d46a17b46ec995627eb7adb88ad8098622bda82c3f6d9b219764b1ffe08cbf
+Description:  LuCI Support for shadowsocks-libev.
+
+Package: luci-app-shadowsocks
+Version: 2.1.1-r1
+Depends: iptables, wget, resolveip, ipset, libc
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 71680
+Filename: luci-app-shadowsocks_2.1.1-r1_all.ipk
+Size: 15111
+SHA256sum: c65bcc8cae7af4126ea5622a6d8ab0a59064efacddefd8ecad2bdf38460181f3
+Description:  LuCI Support for shadowsocks-libev.
+
+Package: luci-app-shadowvpn
+Version: 1.6.3-r1
+Depends: libc, ShadowVPN
+License: GPLv3
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-shadowvpn_1.6.3-r1_all.ipk
+Size: 2906
+SHA256sum: d33ae424c8df0c51841bc4d98d65c34f45500595f480759b9f5d339635592aa1
+Description:  LuCI Support for ShadowVPN.
+
+Package: luci-app-ssr-plus
+Version: 189-r5
+Depends: libc, coreutils, coreutils-base64, dns2socks, dns2tcp, dnsmasq-full, ipset, kmod-ipt-nat, jq, ip-full, iptables, iptables-mod-tproxy, lua, lua-neturl, libuci-lua, microsocks, tcping, resolveip, shadowsocksr-libev-ssr-check, uclient-fetch, libustream-openssl, curl, xray-core, mosdns, shadowsocks-libev-ss-server, shadowsocks-rust-sslocal, simple-obfs, shadowsocksr-libev-ssr-local, shadowsocksr-libev-ssr-redir, shadowsocksr-libev-ssr-server, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 1699840
+Filename: luci-app-ssr-plus_189-r5_all.ipk
+Size: 290196
+SHA256sum: 5645e99b407b5fe5a0ba425fa7cd972123d44c34df6ab0115d96ddaf31b65732
+Description:  SS/SSR/V2Ray/Trojan/NaiveProxy/Tuic/ShadowTLS/Hysteria/Socks5/Tun LuCI interface
+
+Package: luci-app-vlmcsd
+Version: 1.0.2-r1
+Depends: libc, vlmcsd
+License: MIT
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-vlmcsd_1.0.2-r1_all.ipk
+Size: 2504
+SHA256sum: a261725091c291b85119311d49704fe42cd160696f932b2d734d2fbd754369e6
+Description:  This package contains LuCI configuration pages for openwrt-vlmcsd.
+
+Package: luci-i18n-alist-zh-cn
+Version: 25.045.72026~5bc2cbd
+Depends: libc, luci-app-alist
+Section: luci
+Architecture: all
+Installed-Size: 10240
+Filename: luci-i18n-alist-zh-cn_25.045.72026~5bc2cbd_all.ipk
+Size: 3362
+SHA256sum: 7e41719295413965201fca5ee5a86a09f289484d01fc4cd17e6d77ea374fcd70
+Description:  Translation for luci-app-alist - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-bypass-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-bypass
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-i18n-bypass-zh-cn_0.250217.14194_all.ipk
+Size: 7256
+SHA256sum: ef4003c2fe6fb9355d3a1875f98f3dc18f55c22b84d59e06fd46a2b7424e1f89
+Description:  Translation for luci-app-bypass - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-diskman-pl
+Version: 0.250217.14192
+Depends: libc, luci-app-diskman
+License: AGPL-3.0
+Section: luci
+Architecture: all
+Installed-Size: 10240
+Filename: luci-i18n-diskman-pl_0.250217.14192_all.ipk
+Size: 2955
+SHA256sum: b31f57ad612b4b52c92083f63b07f843bc2adb3ce2a92f6a26fcd199cf4f3288
+Description:  Translation for luci-app-diskman - Polski (Polish)
+
+Package: luci-i18n-diskman-zh-cn
+Version: 0.250217.14192
+Depends: libc, luci-app-diskman
+License: AGPL-3.0
+Section: luci
+Architecture: all
+Installed-Size: 10240
+Filename: luci-i18n-diskman-zh-cn_0.250217.14192_all.ipk
+Size: 2975
+SHA256sum: 6551c81ad6f57d084f91eef3357097a4dc2e04676a2b35449f3d852ddb0ea3af
+Description:  Translation for luci-app-diskman - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-diskman-zh-tw
+Version: 0.250217.14192
+Depends: libc, luci-app-diskman
+License: AGPL-3.0
+Section: luci
+Architecture: all
+Installed-Size: 10240
+Filename: luci-i18n-diskman-zh-tw_0.250217.14192_all.ipk
+Size: 2986
+SHA256sum: df6586a75154bc87a50d6df92153759ec380858934849994c415a1485a2875bb
+Description:  Translation for luci-app-diskman - 繁體中文 (Chinese Traditional)
+
+Package: luci-i18n-dockerman-zh-cn
+Version: 0.250217.14192
+Depends: libc, luci-app-dockerman
+License: AGPL-3.0
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-i18n-dockerman-zh-cn_0.250217.14192_all.ipk
+Size: 6585
+SHA256sum: bfe3d415f894fe6a2bccf0ba170f4e933c6abca0a9364ac049657470a233d3f9
+Description:  Translation for luci-app-dockerman - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-fchomo-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-fchomo
+Section: luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-i18n-fchomo-zh-cn_0.250217.14194_all.ipk
+Size: 12919
+SHA256sum: 8f7e40d63a7a678d299a878b3eab20bd618e1049a5ba2df7dd5a25cfd31e7f79
+Description:  Translation for luci-app-fchomo - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-fchomo-zh-tw
+Version: 0.250217.14194
+Depends: libc, luci-app-fchomo
+Section: luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-i18n-fchomo-zh-tw_0.250217.14194_all.ipk
+Size: 12938
+SHA256sum: e1b8eff59ab5bbc42f52bfc7bf03c1ca074047e5bc45145da1d9dc67eb19c427
+Description:  Translation for luci-app-fchomo - 繁體中文 (Chinese Traditional)
+
+Package: luci-i18n-homeproxy-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-homeproxy
+Section: luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-i18n-homeproxy-zh-cn_0.250217.14194_all.ipk
+Size: 14387
+SHA256sum: 3ee41b4e9d52a010f5fcee2261117c4dd6826e49f332ecd40153c7c6159309b3
+Description:  Translation for luci-app-homeproxy - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-mosdns-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-mosdns
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-i18n-mosdns-zh-cn_0.250217.14194_all.ipk
+Size: 5333
+SHA256sum: 573dd2a0948f262e730c95f6d0bcbc1e1896f0fd91ba75eac94099c90d8711b4
+Description:  Translation for luci-app-mosdns - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-nikki-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-nikki
+Section: luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-i18n-nikki-zh-cn_0.250217.14194_all.ipk
+Size: 4873
+SHA256sum: 9f84be3211553009bc50a1902f9686cbdceed04f3c691b5acdb284e1ca26812a
+Description:  Translation for luci-app-nikki - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-passwall-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-passwall
+Section: luci
+Architecture: all
+Installed-Size: 40960
+Filename: luci-i18n-passwall-zh-cn_0.250217.14194_all.ipk
+Size: 17654
+SHA256sum: 9d13ee53891a721f6396f61071cdcd51b7b2f32cf7e1621f35b25bc9908104cc
+Description:  Translation for luci-app-passwall - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-passwall2-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-passwall2
+Section: luci
+Architecture: all
+Installed-Size: 40960
+Filename: luci-i18n-passwall2-zh-cn_0.250217.14194_all.ipk
+Size: 16319
+SHA256sum: 92540cef8520cb872a503367e58b36bceab791eed53f120e90f0fb5af8a256b9
+Description:  Translation for luci-app-passwall2 - 简体中文 (Chinese Simplified)
+
+Package: luci-i18n-ssr-plus-zh-cn
+Version: 0.250217.14194
+Depends: libc, luci-app-ssr-plus
+Section: luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-i18n-ssr-plus-zh-cn_0.250217.14194_all.ipk
+Size: 11738
+SHA256sum: be296dc72d6664b2c1f06b8e8ab636f6d4c99ca8325a6332e397550eec0e6530
+Description:  Translation for luci-app-ssr-plus - 简体中文 (Chinese Simplified)
+
+Package: luci-lib-docker
+Version: v0.3.4-r1
+Depends: libc, luci-lib-jsonc, luci-lua-runtime
+License: AGPL-3.0
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-lib-docker_v0.3.4-r1_all.ipk
+Size: 4674
+SHA256sum: ad3411a04ef296ccbf93d5e8bcd01a2ea15662be41319ef8dee03aa6f895601d
+Description:  Docker Engine API for LuCI
+
+Package: luci-theme-argon
+Version: 2.3.2-r20250207
+Depends: libc, curl, jsonfilter, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 768000
+Filename: luci-theme-argon_2.3.2-r20250207_all.ipk
+Size: 391895
+SHA256sum: 6a05a81f26a9b4718694f0354b1a414f9e6f02fe0a876664bcc05161a3dcad51
+Description:  Argon Theme
+
+Package: mbedtls-util
+Version: 3.6.2-r1
+Depends: libc, libmbedtls21
+License: GPL-2.0-or-later
+Section: utils
+URL: https://www.trustedfirmware.org/projects/mbed-tls/
+CPE-ID: cpe:/a:arm:mbed_tls
+Architecture: x86_64
+Installed-Size: 40960
+Filename: mbedtls-util_3.6.2-r1_x86_64.ipk
+Size: 8992
+SHA256sum: 59a1bccee018f52d8f1608e2dd7be63c9d05ee443e38320b428653ad7bb3fca7
+Description:  The aim of the mbedtls project is to provide a quality, open-source
+ cryptographic library written in C and targeted at embedded systems.
+ This package contains mbedtls helper programs for private key and
+ CSR generation (gen_key, cert_req)
+
+Package: mcookie
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: mcookie_2.40.2-r1_x86_64.ipk
+Size: 12639
+SHA256sum: 0570078547f3e990fef443fcf19726b9f9bb88e621ac34c725ac75ab54696d87
+Description:  mcookie generates a 128-bit random hexadecimal number for use with the X
+ authority system
+
+Package: microsocks
+Version: 1.0.5-r1
+Depends: libc, libpthread
+License: MIT
+Section: net
+URL: https://github.com/rofl0r/microsocks
+Architecture: x86_64
+Installed-Size: 30720
+Filename: microsocks_1.0.5-r1_x86_64.ipk
+Size: 6711
+SHA256sum: 6d5a620780c3bc59fd2a29dc66a58c569e876eae3d7bde989b1a045bf177c7fb
+Description:  A SOCKS5 service that you can run on your remote boxes to tunnel connections
+ through them, if for some reason SSH doesn't cut it for you.
+
+Package: mihomo
+Version: 1.19.2-r1
+Depends: libc
+License: GPL-2.0
+Section: net
+URL: https://wiki.metacubex.one
+Architecture: x86_64
+Installed-Size: 30986240
+Filename: mihomo_1.19.2-r1_x86_64.ipk
+Size: 11528538
+SHA256sum: b06ab11e667df14d46fab756ef76f970749b74945df32b119b7b5b49e9186d86
+Description:  Another Mihomo Kernel.
+
+Package: more
+Version: 2.40.2-r1
+Depends: libc, libncurses6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 61440
+Filename: more_2.40.2-r1_x86_64.ipk
+Size: 20229
+SHA256sum: 755270b4e095e9ce586e242132f43d506c60a6e6f1d0339c4bf6b889203d573e
+Description:  more is a filter for paging through text one screenful at a time
+
+Package: mosdns
+Version: 5.3.3-r3
+Depends: libc, ca-bundle
+License: GPL-3.0
+Section: net
+URL: https://github.com/IrineSistiana/mosdns
+Architecture: x86_64
+Installed-Size: 17592320
+Filename: mosdns_5.3.3-r3_x86_64.ipk
+Size: 6721492
+SHA256sum: 73629bf60de6e346a2e664fd8c20c7f07d9dba3d4c961ec83d45749b6406650b
+Description:  A plug-in DNS forwarder/splitter
+
+Package: mount-utils
+Version: 2.40.2-r1
+Depends: libc, librt, libmount1, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 174080
+Filename: mount-utils_2.40.2-r1_x86_64.ipk
+Size: 59331
+SHA256sum: 4dd9e9e89c662d221e724db4b2dafa94c60cc31ce56bb06f965696c592469a69
+Description:  contains: mount, umount, findmnt
+
+Package: naiveproxy
+Version: 133.0.6943.49-1-r1
+Depends: libc, libatomic1
+License: BSD 3-Clause
+Section: net
+URL: https://github.com/klzgrad/naiveproxy
+Architecture: x86_64
+Installed-Size: 6707200
+Filename: naiveproxy_133.0.6943.49-1-r1_x86_64.ipk
+Size: 3326272
+SHA256sum: 17ffcc2769e160c329ada751a01b590b06019a4d18aef5a6e5a845ad3d7897e1
+Description:  NaïveProxy uses Chrome's network stack to camouflage traffic with strong
+ censorship resistance and low detectability. Reusing Chrome's stack also
+ ensures best practices in performance and security.
+
+Package: namei
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: namei_2.40.2-r1_x86_64.ipk
+Size: 11691
+SHA256sum: bfbeadb7f4465dcbae607cc4d3f825fc371d696d96b5a55cd63beb11a69638a4
+Description:  namei uses its arguments as pathnames to any type of Unix file (symlinks,
+ files, directories, and so forth)
+
+Package: nikki
+Version: 2025.02.13~eaaccbc6-r1
+Depends: libc, ca-bundle, curl, yq, firewall4, ip-full, kmod-inet-diag, kmod-nft-tproxy, kmod-tun
+Provides: mihomo
+License: GPL3.0+
+Section: net
+URL: https://wiki.metacubex.one
+Architecture: x86_64
+Installed-Size: 31426560
+Filename: nikki_2025.02.13~eaaccbc6-r1_x86_64.ipk
+Size: 11611816
+SHA256sum: 8c94acf37a2aa8ca0936c5fe06027c277f05314dea1f9d85df7cbcd9f7780032
+Description:  A rule based proxy in Go.
+
+Package: nsenter
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 71680
+Filename: nsenter_2.40.2-r1_x86_64.ipk
+Size: 26060
+SHA256sum: 08ca99239afeafeed4606afe420bb96abf32ab8796a3cd5191f70b29aad0d5ef
+Description:  run program with namespaces of other processes
+
+Package: openssl-util
+Version: 3.0.15-r1
+Depends: libc, libopenssl3, libopenssl-conf
+License: Apache-2.0
+Section: utils
+URL: https://www.openssl.org/
+CPE-ID: cpe:/a:openssl:openssl
+Architecture: x86_64
+Installed-Size: 839680
+Filename: openssl-util_3.0.15-r1_x86_64.ipk
+Size: 341448
+SHA256sum: 0fbc04be6c3302daf21518df24361836ee0b0ce740e5af81261aecfb16db2182
+Description:  The OpenSSL Project is a collaborative effort to develop a robust,
+ commercial-grade, full-featured, and Open Source toolkit implementing the
+ Transport Layer Security (TLS) protocol as well as a full-strength
+ general-purpose cryptography library.
+ This package contains the OpenSSL command-line utility.
+
+Package: partx-utils
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 153600
+Filename: partx-utils_2.40.2-r1_x86_64.ipk
+Size: 56331
+SHA256sum: 7a820ee2e2cc9524aeb2098f1af36e22e4ded4a8c08b7cf1e8d0dce229587f02
+Description:  contains partx, addpart, delpart
+
+Package: pdnsd-alt
+Version: 1.2.9b-par-r3
+Depends: libc, libpthread
+Section: net
+Architecture: x86_64
+Installed-Size: 215040
+Filename: pdnsd-alt_1.2.9b-par-r3_x86_64.ipk
+Size: 92979
+SHA256sum: efc9fb99aa72fcad574aebb38e9ccfd75dfcd2a77c7435203862996beb352d7b
+Description:  pdnsd, is an IPv6 capable proxy DNS server with permanent caching (the cache
+ contents are written to hard disk on exit) that is designed to cope with
+ unreachable or down DNS servers (for example in dial-in networking).
+ 
+ pdnsd can be used with applications that do dns lookups, eg on startup, and
+ can't be configured to change that behaviour, to prevent the often
+ minute-long hangs (or even crashes) that result from stalled dns queries.
+
+Package: prlimit
+Version: 2.40.2-r1
+Depends: libc, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: prlimit_2.40.2-r1_x86_64.ipk
+Size: 12928
+SHA256sum: 5a62c6bf60b7983c16c61a6c058a5ea6104c1f639adc0fe3e1b9cb364888b0a4
+Description:  Given a process id and one or more resources, prlimit tries to retrieve
+ and/or modify the limits.
+
+Package: rename
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 30720
+Filename: rename_2.40.2-r1_x86_64.ipk
+Size: 7702
+SHA256sum: 7b83be0bbdbb2e5e12885b9c24dddadc63758db1f4dd94c5a864557d87f2b218
+Description:  rename will rename the specified files by replacing the first occurrence of
+ expression in their name by replacement
+
+Package: rev
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 20480
+Filename: rev_2.40.2-r1_x86_64.ipk
+Size: 3709
+SHA256sum: 4a94a0764c8b1d98748f252024bf9889bfc7398be17c4d92468e14c2208d0801
+Description:  rev utility copies the specified files to the standard output, reversing the
+ order of characters in every line. If no files are specified, the standard
+ input is read.
+
+Package: script-utils
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 102400
+Filename: script-utils_2.40.2-r1_x86_64.ipk
+Size: 40675
+SHA256sum: c7109a281cd1e029169457af84dd7b368e5265e6684b31506f90bacdd553c419
+Description:  contains: script, scriptreplay
+
+Package: setterm
+Version: 2.40.2-r1
+Depends: libc, libncurses6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: setterm_2.40.2-r1_x86_64.ipk
+Size: 15887
+SHA256sum: dcedcafcd39b71db879a418f64380bbff2ade4c5edd8ece45fb379bec8bedb52
+Description:  setterm writes to standard output a character string that will invoke the
+ specified terminal capabilities
+
+Package: sfdisk
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libfdisk1, libsmartcols1, libncursesw6
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 143360
+Filename: sfdisk_2.40.2-r1_x86_64.ipk
+Size: 55696
+SHA256sum: 6505caf3d2378209a394fc5345e88b2b0ad59ec5862b255f9e5c91ed9010747d
+Description:  list the size of a partition, list the partitions on a device, check the
+ partitions on a device and repartition a device
+
+Package: shadow-tls
+Version: 0.2.25-r1
+Depends: libc
+License: GPL-3.0
+Section: net
+URL: https://github.com/ihciah/shadow-tls
+Architecture: x86_64
+Installed-Size: 4689920
+Filename: shadow-tls_0.2.25-r1_x86_64.ipk
+Size: 2109940
+SHA256sum: 9a3494f3b31abf03dd5a7899301303ca6371c063c54a47817b87db10a61c2b40
+Description:  A proxy to expose real tls handshake to the firewall.
+
+Package: shadowsocks-rust-sslocal
+Version: 1.22.0-r1
+Depends: libc
+License: MIT
+Section: net
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Architecture: x86_64
+Installed-Size: 12206080
+Filename: shadowsocks-rust-sslocal_1.22.0-r1_x86_64.ipk
+Size: 4969030
+SHA256sum: ed535baf11a12adf9e804ecc2d7488604a837b6d26546c222bd8dd47653d7a80
+Description:  shadowsocks-rust sslocal
+
+Package: shadowsocks-rust-ssmanager
+Version: 1.22.0-r1
+Depends: libc
+License: MIT
+Section: net
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Architecture: x86_64
+Installed-Size: 9594880
+Filename: shadowsocks-rust-ssmanager_1.22.0-r1_x86_64.ipk
+Size: 3911864
+SHA256sum: b6c440e8c0270c9a55e5dd7d168c7f79ddc607683876d03b09795a543b55a810
+Description:  shadowsocks-rust ssmanager
+
+Package: shadowsocks-rust-ssserver
+Version: 1.22.0-r1
+Depends: libc
+License: MIT
+Section: net
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Architecture: x86_64
+Installed-Size: 9410560
+Filename: shadowsocks-rust-ssserver_1.22.0-r1_x86_64.ipk
+Size: 3825917
+SHA256sum: e10f141ea124ceff3245eb29e6ab73ab9202ca93ffd243c586d1f9b97cd3b9de
+Description:  shadowsocks-rust ssserver
+
+Package: shadowsocks-rust-ssservice
+Version: 1.22.0-r1
+Depends: libc
+License: MIT
+Section: net
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Architecture: x86_64
+Installed-Size: 13260800
+Filename: shadowsocks-rust-ssservice_1.22.0-r1_x86_64.ipk
+Size: 5398831
+SHA256sum: b487700f56b2f28b98d1ca73135365d7766e603f5402d2fae581e73f08ab4488
+Description:  shadowsocks-rust ssservice
+
+Package: shadowsocks-rust-ssurl
+Version: 1.22.0-r1
+Depends: libc
+License: MIT
+Section: net
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Architecture: x86_64
+Installed-Size: 3287040
+Filename: shadowsocks-rust-ssurl_1.22.0-r1_x86_64.ipk
+Size: 1263199
+SHA256sum: 509272726298027c8aed38bf52b23533079b3d77a4237949ccef7ea55c9c203d
+Description:  shadowsocks-rust ssurl
+
+Package: shadowsocksr-libev-ssr-check
+Version: 2.5.3-r1
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib, libopenssl-legacy
+License: GPL-3.0
+Section: net
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 20480
+Filename: shadowsocksr-libev-ssr-check_2.5.3-r1_x86_64.ipk
+Size: 3075
+SHA256sum: 2d52d3d50d2bdcc67acfea17ff5ef6994157093a7c0755797afbe609c009cf60
+Description:  shadowsocksr-libev ssr-check
+
+Package: shadowsocksr-libev-ssr-local
+Version: 2.5.3-r1
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib, libopenssl-legacy
+License: GPL-3.0
+Section: net
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 143360
+Filename: shadowsocksr-libev-ssr-local_2.5.3-r1_x86_64.ipk
+Size: 63600
+SHA256sum: 95102afd1a292ecda76aaf09a67b34a823d82317daf25b2911db7113217bf1c9
+Description:  shadowsocksr-libev ssr-local
+
+Package: shadowsocksr-libev-ssr-nat
+Version: 2.5.3-r1
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib, libopenssl-legacy
+License: GPL-3.0
+Section: net
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 10240
+Filename: shadowsocksr-libev-ssr-nat_2.5.3-r1_x86_64.ipk
+Size: 3009
+SHA256sum: 7037d8d1e261d2c7ac8e5a422c527e6176264e8fe2308da753cb8e99f2dad40e
+Description:  shadowsocksr-libev ssr-nat
+
+Package: shadowsocksr-libev-ssr-redir
+Version: 2.5.3-r1
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib, libopenssl-legacy
+License: GPL-3.0
+Section: net
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 133120
+Filename: shadowsocksr-libev-ssr-redir_2.5.3-r1_x86_64.ipk
+Size: 56795
+SHA256sum: 2963b17ce10bdcdfdc55f97e71d7798a97df789590cf0f5f38a003383fa96b68
+Description:  shadowsocksr-libev ssr-redir
+
+Package: shadowsocksr-libev-ssr-server
+Version: 2.5.3-r1
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib, libopenssl-legacy
+License: GPL-3.0
+Section: net
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 153600
+Filename: shadowsocksr-libev-ssr-server_2.5.3-r1_x86_64.ipk
+Size: 66721
+SHA256sum: 2b5e7f91e6b4b1db16ce6e5ebfa35d0bda00f03379a72f04c3889f1eef847f7b
+Description:  shadowsocksr-libev ssr-server
+
+Package: simple-obfs-client
+Version: 0.0.5-r1
+Depends: libc, libpthread, libev
+Provides: simple-obfs
+License: GPL-3.0-or-later
+Section: net
+URL: https://github.com/shadowsocks/simple-obfs
+Architecture: x86_64
+Installed-Size: 81920
+Filename: simple-obfs-client_0.0.5-r1_x86_64.ipk
+Size: 31225
+SHA256sum: 745b4701c461bc86ed69a40fb4b1e00dc534f9992151e75df1196e1a608af2a6
+Description:  Simple-obfs is a simple obfusacting tool, designed as plugin server of shadowsocks.
+
+Package: simple-obfs-server
+Version: 0.0.5-r1
+Depends: libc, libpthread, libev
+License: GPL-3.0-or-later
+Section: net
+URL: https://github.com/shadowsocks/simple-obfs
+Architecture: x86_64
+Installed-Size: 81920
+Filename: simple-obfs-server_0.0.5-r1_x86_64.ipk
+Size: 33617
+SHA256sum: 8160bfc53146a8d91a405a5459269444d0581e4ab5985497527cdbf863daf4aa
+Description:  Simple-obfs is a simple obfusacting tool, designed as plugin server of shadowsocks.
+
+Package: sing-box
+Version: 1.11.3-r1
+Depends: libc, ca-bundle, kmod-inet-diag, kmod-netlink-diag, kmod-tun
+License: GPL-3.0-or-later
+Section: net
+URL: https://sing-box.sagernet.org
+Architecture: x86_64
+Installed-Size: 31283200
+Filename: sing-box_1.11.3-r1_x86_64.ipk
+Size: 11529138
+SHA256sum: e642e6a53256059d3ffe9ed256a08586f6dc5390b0b4444dcab93844b22d36e4
+Description:  Sing-box is a universal proxy platform which supports hysteria, SOCKS,
+ Shadowsocks, ShadowTLS, Tor, trojan, VLess, VMess, WireGuard and so on.
+
+Package: ssocks
+Version: 0.0.14-r3
+Depends: libc, libopenssl3
+License: MIT
+Section: net
+URL: https://github.com/tostercx/ssocks
+Architecture: x86_64
+Installed-Size: 40960
+Filename: ssocks_0.0.14-r3_x86_64.ipk
+Size: 15544
+SHA256sum: 064f1241348ea78d126158800ad15c00c4192630bbb49d400ca20580e3c7e414
+Description:  sSocks is a package which contains: a socks5 server implements RFC 1928 (SOCKS V5) and
+ RFC 1929 (Authentication for SOCKS V5), a reverse socks server and client, a netcat like tool
+ and a socks5 relay.
+
+Package: ssocksd
+Version: 0.0.14-r3
+Depends: libc, libopenssl3
+License: MIT
+Section: net
+URL: https://github.com/tostercx/ssocks
+Architecture: x86_64
+Installed-Size: 40960
+Filename: ssocksd_0.0.14-r3_x86_64.ipk
+Size: 15772
+SHA256sum: 4524b59d93529515810c739c543699c70255c9a548443530b8bb4359628aaf4b
+Description:  sSocks is a package which contains: a socks5 server implements RFC 1928 (SOCKS V5) and
+ RFC 1929 (Authentication for SOCKS V5), a reverse socks server and client, a netcat like tool
+ and a socks5 relay.
+
+Package: swap-utils
+Version: 2.40.2-r1
+Depends: libc, librt, libblkid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 122880
+Filename: swap-utils_2.40.2-r1_x86_64.ipk
+Size: 50325
+SHA256sum: 82c216a05f66c14709bdf91f7d83aca9a4c8b93698d2fd3707b6e58d3f25b9b7
+Description:  contains: mkswap, swaplabel
+
+Package: taskset
+Version: 2.40.2-r1
+Depends: libc, librt
+Alternatives: 200:/usr/bin/taskset:/usr/bin/util-linux-taskset
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 61440
+Filename: taskset_2.40.2-r1_x86_64.ipk
+Size: 21631
+SHA256sum: c45c099f74d2864cc80f5d11cbe18f8e4c73918f4f7aeea2582b0968c1aa454a
+Description:  contains: taskset
+
+Package: tcping
+Version: 0.3-r2
+Depends: libc
+License: GPL-2.0-only
+Section: net
+URL: https://github.com/jlyo/tcping
+Architecture: x86_64
+Installed-Size: 20480
+Filename: tcping_0.3-r2_x86_64.ipk
+Size: 4036
+SHA256sum: 5ce5cb61a1a44a11f054ce06baef189f2cd01f6bddc26903c2f4c58504d8633c
+Description:  tcping measures the latency of a tcp-connection (IPv4/IPv6 support)
+
+Package: terminfo
+Version: 6.4-r2
+Depends: libc
+License: MIT
+Section: libs
+URL: http://www.gnu.org/software/ncurses/
+CPE-ID: cpe:/a:gnu:ncurses
+Architecture: x86_64
+Installed-Size: 61440
+Filename: terminfo_6.4-r2_x86_64.ipk
+Size: 9499
+SHA256sum: b66087925682e5810bdb6653107c9a987c5c6f024f85236eb8659bffa559d77e
+Description:  Terminal Info Database (ncurses)
+
+Package: trojan-go
+Version: 0.10.6-r1
+Depends: libc, ca-bundle
+License: GPL-3.0-only
+Section: net
+URL: https://p4gefau1t.github.io/trojan-go/
+Architecture: x86_64
+Installed-Size: 14735360
+Filename: trojan-go_0.10.6-r1_x86_64.ipk
+Size: 5721171
+SHA256sum: 732c1a4de1bbcf0416583e3176a2e085bd3f2215cff7cfbb4e63d4394b967c0a
+Description:  Trojan features multiple protocols over TLS to avoid both
+ active/passive detections and ISP QoS limitations.
+
+Package: trojan-plus
+Version: 10.0.3-r3
+Depends: libc, libpthread, libstdcpp6, libopenssl3, boost, boost-system, boost-program_options
+License: GPL-3.0
+Section: net
+URL: https://github.com/Trojan-Plus-Group/trojan-plus
+Architecture: x86_64
+Installed-Size: 1064960
+Filename: trojan-plus_10.0.3-r3_x86_64.ipk
+Size: 446147
+SHA256sum: eb2c23c2cc0740f85731422801bb5486a9bd92f09edb5e332786135355f2bf5f
+Description:  An unidentifiable mechanism that helps you bypass GFW. It's compatible with original trojan with experimental features.
+
+Package: trojan
+Version: 1.16.0-r2
+Depends: libc, libpthread, libstdcpp6, libopenssl3, boost, boost-system, boost-program_options, boost-date_time
+License: GPL-3.0
+Section: net
+URL: https://github.com/trojan-gfw/trojan
+Architecture: x86_64
+Installed-Size: 798720
+Filename: trojan_1.16.0-r2_x86_64.ipk
+Size: 309234
+SHA256sum: 738adfe5731cff79be98213d94caa1f2d203a1619f1a03f7c232cbd4729541e4
+Description:  An unidentifiable mechanism that helps you bypass GFW
+
+Package: tuic-client
+Version: 1.0.0-r1
+Depends: libc
+Section: net
+URL: https://github.com/EAimTY/tuic/
+Architecture: x86_64
+Installed-Size: 2334720
+Filename: tuic-client_1.0.0-r1_x86_64.ipk
+Size: 1125179
+SHA256sum: 46554c30ae2ddcc411ba32806eef343e40b1fe2cc5e697b89bbbd347dfaa526f
+Description:  Delicately-TUICed 0-RTT proxy protocol
+
+Package: unshare
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 81920
+Filename: unshare_2.40.2-r1_x86_64.ipk
+Size: 29444
+SHA256sum: b25632e138f9cb987199dc25f42a2465c14b13e27e3322b1b600a2865fafd008
+Description:  run programs with some namespaces unshared from parent
+
+Package: uuidd
+Version: 2.40.2-r1
+Depends: libc, libuuid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: uuidd_2.40.2-r1_x86_64.ipk
+Size: 15140
+SHA256sum: 9c1a7ae84c9260fac84863f618135cba83ae3bcbcceefcc19520164a5db29019
+Description:  The uuidd daemon is used by the UUID library to generate universally unique
+ identifiers (UUIDs), especially time-based UUIDs, in a secure and
+ guaranteed-unique fashion, even in the face of large numbers of threads
+ running on different CPUs trying to grab UUIDs.
+
+Package: uuidgen
+Version: 2.40.2-r1
+Depends: libc, libuuid1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: uuidgen_2.40.2-r1_x86_64.ipk
+Size: 10757
+SHA256sum: 4eff6cf4e16c77994c31f7bf6d1b041e9a2171d4051638a2ddbdbc91df1bb144
+Description:  The uuidgen program creates (and prints) a new universally unique identifier
+ (UUID) using the libuuid library. The new UUID can reasonably be considered
+ unique among all UUIDs created on the local system, and among UUIDs created on
+ other systems in the past and in the future.
+
+Package: v2dat
+Version: 2022.12.15~47b8ee51-r1
+Depends: libc
+License: GPL-3.0
+Section: utils
+URL: https://github.com/urlesistiana/v2dat
+Architecture: x86_64
+Installed-Size: 7751680
+Filename: v2dat_2022.12.15~47b8ee51-r1_x86_64.ipk
+Size: 3059315
+SHA256sum: e2c6a7d715412daffa08e6e5a1ac2f422e7f8eabfaff5f99cde009c6240ef506
+Description:  V2ray geo/ip data unpack tools
+
+Package: v2ray-core
+Version: 5.29.0-r1
+Depends: libc, ca-bundle
+License: MIT
+Section: net
+URL: https://www.v2fly.org
+Architecture: x86_64
+Installed-Size: 35317760
+Filename: v2ray-core_5.29.0-r1_x86_64.ipk
+Size: 12796434
+SHA256sum: edacea22fa7bf760c4bf5be1840e1c4079c255b8c2073994cd7eefe5552c72ba
+Description:  Project V is a set of network tools that help you to build your own computer network.
+ It secures your network connections and thus protects your privacy.
+
+Package: v2ray-extra
+Version: 5.29.0-r1
+Depends: libc, v2ray-core
+License: MIT
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 1556480
+Filename: v2ray-extra_5.29.0-r1_all.ipk
+Size: 299382
+SHA256sum: 952d7386491834fc3445c21e0b05274bd577ff585f53af6f4058c7a7ba708a0e
+Description:  Project V is a set of network tools that help you to build your own computer network.
+ It secures your network connections and thus protects your privacy.
+ 
+ This includes extra resources for v2ray-core.
+
+Package: v2ray-geoip
+Version: 202502050123-1
+Depends: libc
+License: CC-BY-SA-4.0
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 20387840
+Filename: v2ray-geoip_202502050123-1_all.ipk
+Size: 3891757
+SHA256sum: 56a0d9c238bc08c29316dde709a471d175f9a4d2f276b9d7c66759fadcdb94e1
+Description:  GeoIP List for V2Ray
+
+Package: v2ray-geosite-ir
+Version: 202502170036-1
+Depends: libc
+Provides: xray-geosite-ir
+License: MIT
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 3706880
+Filename: v2ray-geosite-ir_202502170036-1_all.ipk
+Size: 1051876
+SHA256sum: 45d3e397e6f921f27c43d3bf775581573679c8b23e2804d05831fbeedc702e63
+Description:  Iran Geosite List for V2Ray
+
+Package: v2ray-geosite
+Version: 20250216152937-1
+Depends: libc
+License: MIT
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 2201600
+Filename: v2ray-geosite_20250216152937-1_all.ipk
+Size: 633335
+SHA256sum: a5a07f493f7f2ea515e4159c15613c8d024cb7f4d795b9b35a3ac63cbd0cf1e8
+Description:  Geosite List for V2Ray
+
+Package: v2ray-plugin
+Version: 5.25.0-r1
+Depends: libc, ca-bundle
+License: MIT
+Section: net
+URL: https://github.com/teddysun/v2ray-plugin
+Architecture: x86_64
+Installed-Size: 15646720
+Filename: v2ray-plugin_5.25.0-r1_x86_64.ipk
+Size: 6014577
+SHA256sum: fe1b9ce7b699b82e306c51375dae8b50399b0662693bc4fe4670375cce849f4b
+Description:  SIP003 plugin for shadowsocks, based on v2ray
+
+Package: v2raya
+Version: 2.2.6.3-r1
+Depends: libc, ca-bundle
+License: AGPL-3.0-only
+Section: net
+URL: https://v2raya.org
+Architecture: x86_64
+Installed-Size: 27371520
+Filename: v2raya_2.2.6.3-r1_x86_64.ipk
+Size: 11987402
+SHA256sum: 2b34a567827d61d43a47c555e29d3f391345ca94a0ad3a64c90f6061a4df65f5
+Description:  v2rayA is a V2Ray Linux client supporting global transparent proxy,
+ compatible with SS, SSR, Trojan(trojan-go), PingTunnel protocols.
+
+Package: vlmcsd
+Version: svn1113-r1
+Depends: libc, libpthread
+License: MIT
+Section: net
+URL: http://forums.mydigitallife.info/threads/50234
+Architecture: x86_64
+Installed-Size: 133120
+Filename: vlmcsd_svn1113-r1_x86_64.ipk
+Size: 58553
+SHA256sum: aa2124216349f74653cfe12ec106bee2924a0b15c9b282d8c38aef599a44387d
+Description:  vlmcsd is a KMS Emulator in C.
+
+Package: wall
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 40960
+Filename: wall_2.40.2-r1_x86_64.ipk
+Size: 12616
+SHA256sum: 5768a5fa61251609fc0858ab10f5fc84796c46c4176fbe05e8560395f9c65120
+Description:  wall sends a message to everybody logged in with their mesg permission
+ set to yes
+
+Package: whereis
+Version: 2.40.2-r1
+Depends: libc, librt
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 30720
+Filename: whereis_2.40.2-r1_x86_64.ipk
+Size: 9504
+SHA256sum: 5fcc165045a81fb341ed0ae19ef9d732f5f791118cf7d6e0cdf2c5b95cc621b8
+Description:  whereis locates source/binary and manuals sections for specified files
+
+Package: wipefs
+Version: 2.40.2-r1
+Depends: libc, libblkid1, libsmartcols1
+License: GPL-2.0-only
+Section: utils
+URL: http://www.kernel.org/pub/linux/utils/util-linux/
+CPE-ID: cpe:/a:kernel:util-linux
+Architecture: x86_64
+Installed-Size: 51200
+Filename: wipefs_2.40.2-r1_x86_64.ipk
+Size: 16611
+SHA256sum: c4619ecf002794ac101eece6fbae07720e7ca59a645e82eb93a11a553ef9e546
+Description:  wipefs can erase filesystem, raid or partition table signatures (magic
+ strings) from the specified device to make the signature invisible for
+ libblkid.
+
+Package: xray-core
+Version: 25.1.30-r1
+Depends: libc, ca-bundle
+License: MPL-2.0
+Section: net
+URL: https://xtls.github.io
+Architecture: x86_64
+Installed-Size: 28794880
+Filename: xray-core_25.1.30-r1_x86_64.ipk
+Size: 10693915
+SHA256sum: b16c00c7dbcf0017e45da8c7037775959a656263bfa353e5d0930c59063bd3a3
+Description:  Xray, Penetrates Everything. It helps you to build your own computer network.
+ It secures your network connections and thus protects your privacy.
+
+Package: xray-plugin
+Version: 1.8.24-r1
+Depends: libc, ca-bundle
+License: MIT
+Section: net
+URL: https://github.com/teddysun/xray-plugin
+Architecture: x86_64
+Installed-Size: 18636800
+Filename: xray-plugin_1.8.24-r1_x86_64.ipk
+Size: 7076078
+SHA256sum: 60efd4cc61e2a5b33f20142332d1a27f386aaa7b770fe42b924f3ac07f967e70
+Description:  SIP003 plugin for Shadowsocks, based on Xray
+
+Package: zlib-dev
+Version: 1.3.1-r1
+Depends: libc, zlib
+License: Zlib
+Section: devel
+CPE-ID: cpe:/a:gnu:zlib
+Architecture: x86_64
+Installed-Size: 235520
+Filename: zlib-dev_1.3.1-r1_x86_64.ipk
+Size: 80523
+SHA256sum: 8f4cc0e0539ed478c64a15571937396d4c949f26460c61a9c575356a749c9d19
+Description:  zlib is a lossless data-compression library.
+ This package includes the development support files.
+
+Package: zlib
+Version: 1.3.1-r1
+Depends: libc
+License: Zlib
+Section: libs
+URL: http://www.zlib.net/
+CPE-ID: cpe:/a:gnu:zlib
+Architecture: x86_64
+Installed-Size: 92160
+Filename: zlib_1.3.1-r1_x86_64.ipk
+Size: 44055
+SHA256sum: e37b84681c6b7ab4521a88efa21aa97d832aaa9a4d7aa5d954bffc81d1a542ce
+Description:  zlib is a lossless data-compression library.
+ This package includes the shared library.
+
