@@ -1,5 +1,5 @@
 # OpenWRT dist
-[![](https://github.com/simonsmh/openwrt-dist/workflows/Openwrt%20Build%20Bot/badge.svg)](https://github.com/simonsmh/openwrt-dist/actions)
+[![](https://github.com/fangguangyang/openwrt-dist/workflows/Openwrt%20Build%20Bot/badge.svg)](https://github.com/simonsmh/openwrt-dist/actions)
 
 Build with GitHub Action Workflow daily.
 
@@ -71,7 +71,7 @@ Build configurable images with ImageBuilder after the SDK finished building pack
 [Reference for installation](https://openwrt.org/docs/guide-user/installation/generic.sysupgrade)
 
 ## Build it yourself
-[Check here](https://github.com/simonsmh/openwrt-dist/blob/master/.github/workflows/main.yml)
+[Check here](https://github.com/fangguangyang/openwrt-dist/blob/master/.github/workflows/main.yml)
 
 You need to make a fork and chage items in the matrix yourself to match your needs. If you need to keep your packages safe, please use `usign` to regenerate private key and make the repo private.
 
