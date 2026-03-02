@@ -93,6 +93,7 @@ jobs:
         pushd /tmp
         git clone --depth 1 -b master https://github.com/kenzok8/small
         wget https://raw.githubusercontent.com/v2rayA/v2raya-openwrt/master/v2raya/Makefile -O small/v2raya/Makefile
+        sed -i 's/PKG_HASH:=.*/PKG_HASH:=skip/' small/xray-plugin/Makefile
         popd
         for subdir in /tmp/small/*; do [ -d "$subdir" ] && [ ! -d ".package/$(basename "$subdir")" ] && cp -r "$subdir" ./package/; done
         make defconfig
