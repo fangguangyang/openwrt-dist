@@ -8,7 +8,9 @@
 
 版本支持 `latest`（默认）、完整版本号（如 `25.12.2`）、版本系列（`25.12` / `openwrt-25.12`）和 `SNAPSHOT`。Actions → **Packages** 可手动覆盖版本；push 到 master、每月 1 日也会运行。
 
-本工作流还支持 `workflow_call`，由 `fangguangyang/OpenWrt` 固件流水线调用。它接收已经解析好的 SDK/ImageBuilder 元数据，输出 `{设备: Release软件源URL}`，保证软件和镜像版本一致。**先推送本仓库的工作流，再同步推送固件仓库的 Release 源适配。** 可复用调用中 Variables 来自调用方仓库；独立运行时来自本仓库。
+软件源流水线独立运行。`fangguangyang/OpenWrt` 固件流水线直接读取本仓库已发布的同版本、同 target Release，校验匹配后用 ImageBuilder 打包，不再为每次固件构建重复执行本工作流。首次发布新版本的软件源时先运行本仓库，完成后再运行固件流水线。
+
+本工作流仍保留 `workflow_call`，供需要显式构建软件源的其他调用方使用：接收 SDK/ImageBuilder 元数据，输出 `{设备: Release软件源URL}`。这种显式调用会执行软件源任务；可复用调用中的 Variables 来自调用方仓库，独立运行时来自本仓库。
 
 ## 固定签名密钥（首次配置一次）
 

@@ -1,4 +1,5 @@
 import hashlib
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import importlib.util
 import json
 import os
@@ -7,8 +8,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from unittest.mock import patch
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -86,7 +89,7 @@ class PrebuiltTests(unittest.TestCase):
 
 @unittest.skipUnless(os.getenv("TEST_APK_SDK"), "Set TEST_APK_SDK to test native signed prebuilt downloads")
 class NativePrebuiltTests(unittest.TestCase):
-    def test_signed_index_fetches_only_requested_packages_and_rejects_tampering(self):
+    def test_signed_http_index_fetches_from_empty_cache_and_rejects_tampering(self):
         native = Path(os.environ["TEST_APK_SDK"]).resolve()
         apk = str(native / "staging_dir/host/bin/apk")
         with tempfile.TemporaryDirectory() as directory:
@@ -100,29 +103,63 @@ class NativePrebuiltTests(unittest.TestCase):
             private = root / "private.pem"
             subprocess.run(["openssl", "genpkey", "-algorithm", "EC", "-pkeyopt", "ec_paramgen_curve:P-256", "-out", str(private)], check=True, capture_output=True)
             subprocess.run(["openssl", "pkey", "-in", str(private), "-pubout", "-out", str(keys / "feed.pem")], check=True, capture_output=True)
-            for name in ("luci-app-passwall", "dependency"):
+            requested = ["luci-app-openclash", "luci-app-passwall"]
+            for name in (*requested, "dependency"):
                 payload = root / name
                 payload.mkdir()
                 (payload / "data").write_text(name)
-                command = [apk, "mkpkg", "--info", "name:" + name, "--info", "version:1.0-r1", "--info", "arch:aarch64_generic", "--info", "license:MIT", "--files", str(payload), "--output", str(repo / (name + "-1.0-r1.apk"))]
+                command = [apk, "mkpkg", "--info", "name:" + name, "--info", "version:1.0-r1", "--info", "arch:noarch", "--info", "license:MIT", "--files", str(payload), "--output", str(repo / (name + "-1.0-r1.apk"))]
                 if name == "luci-app-passwall":
                     command += ["--info", "depends:dependency"]
                 subprocess.run(command, check=True, capture_output=True)
             subprocess.run([apk, "mkndx", "--allow-untrusted", "--sign", str(private), "--output", str(repo / "packages.adb"), *map(str, repo.glob("*.apk"))], check=True, capture_output=True)
-            for case in ("valid", "tampered"):
-                if case == "tampered":
-                    target = repo / "luci-app-passwall-1.0-r1.apk"
-                    target.write_bytes(target.read_bytes()[:50])
-                state, dest = root / case, output / case
-                state.mkdir()
-                dest.mkdir()
-                with patch.object(prebuilt, "repositories", return_value=str(repo / "packages.adb") + "\n"):
+            requests = []
+
+            class Handler(BaseHTTPRequestHandler):
+                def log_message(self, *_):
+                    pass
+
+                def do_GET(self):
+                    name = unquote(urlsplit(self.path).path).rsplit("/", 1)[-1]
+                    requests.append(name)
+                    path = repo / name
+                    if not path.is_file():
+                        self.send_error(404)
+                        return
+                    data = path.read_bytes()
+                    self.send_response(200)
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+
+            server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            environment = {k: v for k, v in os.environ.items() if not k.lower().endswith("proxy")}
+            environment["NO_PROXY"] = "127.0.0.1,localhost"
+            url = f"http://127.0.0.1:{server.server_port}/luci/packages.adb"
+            try:
+                for case, arch in (("amd64", "x86_64"), ("m28c", "aarch64_generic"), ("tampered", "x86_64")):
                     if case == "tampered":
-                        with self.assertRaises(subprocess.CalledProcessError):
-                            prebuilt.fetch_packages({"package_manager": "apk", "arch": "aarch64_generic"}, builder, dest, ["luci-app-passwall"], state)
-                    else:
-                        prebuilt.fetch_packages({"package_manager": "apk", "arch": "aarch64_generic"}, builder, dest, ["luci-app-passwall"], state)
-                        self.assertEqual([p.name for p in dest.glob("*.apk")], ["luci-app-passwall-1.0-r1.apk"])
+                        target = repo / "luci-app-passwall-1.0-r1.apk"
+                        target.write_bytes(target.read_bytes()[:50])
+                    state, dest = root / case, output / case
+                    state.mkdir()
+                    dest.mkdir()
+                    with patch.object(prebuilt, "repositories", return_value=url + "\n"), \
+                         patch.dict(os.environ, environment, clear=True):
+                        if case == "tampered":
+                            with self.assertRaises(subprocess.CalledProcessError):
+                                prebuilt.fetch_packages({"package_manager": "apk", "arch": arch}, builder, dest, requested, state)
+                        else:
+                            prebuilt.fetch_packages({"package_manager": "apk", "arch": arch}, builder, dest, requested, state)
+                            self.assertEqual(sorted(p.name for p in dest.glob("*.apk")), [name + "-1.0-r1.apk" for name in requested])
+                self.assertEqual(requests.count("packages.adb"), 3)
+                self.assertNotIn("dependency-1.0-r1.apk", requests)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join()
 
 
 if __name__ == "__main__":

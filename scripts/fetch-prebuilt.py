@@ -43,13 +43,15 @@ def fetch_packages(metadata, builder, destination, packages, state):
     package_root = state / "root"
     package_root.mkdir()
     cache = state / "cache"
-    cache.mkdir()
     if manager == "apk":
+        # fetch otherwise reads remote indexes only from cache. This job starts
+        # without cached indexes, so load them from the signed official feeds.
         command = [str(builder / "staging_dir/host/bin/apk"), "--root", str(package_root),
                    "--arch", metadata["arch"], "--keys-dir", str(builder / "keys"),
-                   "--repositories-file", str(config), "--cache-dir", str(cache),
+                   "--repositories-file", str(config), "--no-cache",
                    "fetch", "--output", str(destination), *packages]
     elif manager == "opkg":
+        cache.mkdir()
         # ImageBuilder's opkg wrapper verifies repository signatures with these keys.
         command = [str(builder / "staging_dir/host/bin/opkg"), "--offline-root", str(package_root),
                    "--conf", str(config), "--lists-dir", str(cache),

@@ -39,7 +39,7 @@ jobs:
       targets: ${{ steps.matrix.outputs.targets }}
       builds: ${{ steps.matrix.outputs.builds }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: fangguangyang/openwrt-dist
           ref: master
@@ -82,7 +82,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.targets) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: fangguangyang/openwrt-dist
           ref: master
@@ -91,7 +91,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential clang cmake ninja-build flex bison g++ gawk gcc-multilib gettext git libelf-dev libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev zstd file wget
       - name: Cache official SDK archive
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .build/${{ matrix.id }}/downloads
           key: sdk-archive-${{ matrix.sdk.sha256 }}
@@ -103,14 +103,14 @@ jobs:
           printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
           bash scripts/prepare-sdk.sh "$RUNNER_TEMP/build.json"
           tar -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE" sdk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sdk-${{ matrix.id }}
           path: ${{ runner.temp }}/sdk-${{ matrix.id }}.tar.zst
           compression-level: 0
           retention-days: 1
       - name: Share source lock with prebuilt package jobs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sources-${{ matrix.id }}
           path: .build/${{ matrix.id }}/sdk/sources.json
@@ -131,7 +131,7 @@ jobs:
         uses: jlumbroso/free-disk-space@main
         with:
           large-packages: false
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: fangguangyang/openwrt-dist
           ref: master
@@ -140,7 +140,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential clang cmake ninja-build flex bison g++ gawk gcc-multilib gettext git libelf-dev libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev zstd file wget
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         with:
           name: sdk-${{ matrix.id }}
@@ -154,7 +154,7 @@ jobs:
           tar -xf "$RUNNER_TEMP/sdk/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE"
       - name: Download source lock for prebuilt packages
         if: ${{ matrix.group == 'openclash' || matrix.group == 'passwall' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sources-${{ matrix.id }}
           path: .build/${{ matrix.id }}/sdk
@@ -165,13 +165,13 @@ jobs:
           sudo apt-get install -y python3 zstd
       - name: Cache official ImageBuilder for prebuilt packages
         if: ${{ matrix.group == 'openclash' || matrix.group == 'passwall' }}
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .build/${{ matrix.id }}/downloads
           key: prebuilt-imagebuilder-${{ matrix.imagebuilder.sha256 }}
       - name: Cache downloads and compiled host toolchains
         if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             .build/${{ matrix.id }}/sdk/dl
@@ -194,7 +194,7 @@ jobs:
           bash scripts/build-packages.sh "$RUNNER_TEMP/build.json" "$GROUP"
       - name: Upload build diagnostics
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-logs-${{ matrix.id }}-${{ matrix.group }}
           path: |
@@ -203,7 +203,7 @@ jobs:
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 3
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: packages-${{ matrix.id }}-${{ matrix.group }}
           path: parts/${{ matrix.id }}/${{ matrix.group }}/
@@ -221,7 +221,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.prepare.outputs.targets) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: fangguangyang/openwrt-dist
           ref: master
@@ -229,11 +229,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential gawk libncurses-dev libssl-dev python3 rsync unzip zstd file wget
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: sdk-${{ matrix.id }}
           path: ${{ runner.temp }}/sdk
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: packages-${{ matrix.id }}-*
           path: parts
@@ -250,7 +250,7 @@ jobs:
           printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
           bash scripts/sign-feed.sh "$RUNNER_TEMP/build.json" parts
           bash scripts/publish-feed.sh "$RUNNER_TEMP/build.json" "repository/$DEVICE" fangguangyang/openwrt-dist
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: feed-result-${{ matrix.id }}
           path: feed-results/${{ matrix.id }}.json
@@ -261,7 +261,7 @@ jobs:
     outputs:
       repositories: ${{ steps.collect.outputs.repositories }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: feed-result-*
           path: feed-results
