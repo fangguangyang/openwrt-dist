@@ -1,0 +1,10 @@
+{
+  "luci-theme-argon": {
+    "repository": "https://github.com/jerrykuku/luci-theme-argon.git", "branch": "master",
+    "dependencies": ["luci-base", "lua", "csstidy", "luasrcdiet", "wget-ssl", "ca-bundle", "jsonfilter", "ucode-mod-math", "flock", "coreutils", "coreutils-timeout"]
+  },
+  "luci-theme-design": {
+    "repository": "https://github.com/0x676e67/luci-theme-design.git", "branch": "main",
+    "dependencies": ["luci-base", "lua", "csstidy", "luasrcdiet", "luci-lua-runtime"]
+  }
+}

@@ -1,0 +1,4 @@
+luci-theme-design
+luci-app-store
+luci-app-quickstart
+xz-utils

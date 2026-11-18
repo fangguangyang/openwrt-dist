@@ -1,0 +1,9 @@
+# One owner for each package; avoid duplicate MosDNS/AdGuardHome installs.
+passwall_packages *
+passwall luci-app-passwall
+openclash luci-app-openclash
+mosdns luci-app-mosdns mosdns geo2txt
+openlist luci-app-openlist2 openlist2
+istore luci-app-store taskd luci-lib-taskd luci-lib-xterm
+nas quickstart
+nas_luci luci-app-quickstart

@@ -1,0 +1,16 @@
+# Custom applications plus maintained replacements for the old Lua proxy apps.
+luci-app-openclash
+luci-app-adguardhome
+luci-app-passwall
+luci-theme-argon
+luci-app-mosdns
+luci-app-openlist2
+luci-app-dockerman
+luci-app-diskman
+luci-app-modemband
+luci-app-sms-tool-js
+shadowsocks-rust-sslocal
+shadowsocks-rust-ssserver
+simple-obfs-client
+v2ray-plugin
+xray-core

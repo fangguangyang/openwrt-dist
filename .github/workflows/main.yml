@@ -1,238 +1,230 @@
-name: Openwrt Build Bot
+name: Packages
+
 on:
   push:
-    branches: master
+    branches: [master]
+    paths-ignore: ['**/*.md']
   schedule:
-  - cron: 0 0 1 * *
-  # Allows you to run this workflow manually from the Actions tab
+    - cron: '0 0 1 * *'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (empty uses OPENWRT_VERSION, then latest)'
+        default: ''
+  workflow_call:
+    inputs:
+      matrix:
+        description: 'Resolved SDK/ImageBuilder metadata from the firmware workflow'
+        required: true
+        type: string
+    secrets:
+      TOKEN:
+        required: true
+    outputs:
+      repositories:
+        description: 'JSON mapping device IDs to immutable package repository commits'
+        value: ${{ jobs.results.outputs.repositories }}
+
+permissions:
+  contents: write
 
 jobs:
-  buildpkg:
-    name: Build Openwrt Package
-    runs-on: ubuntu-latest
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      targets: ${{ steps.matrix.outputs.targets }}
+      builds: ${{ steps.matrix.outputs.builds }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: fangguangyang/openwrt-dist
+          ref: master
+      - name: Check software partition and repository validation
+        run: python3 -m unittest discover -s tests -v
+      - name: Resolve SDKs and software groups
+        id: matrix
+        env:
+          MATRIX_JSON: ${{ inputs.matrix }}
+          OPENWRT_VERSION: ${{ inputs.version || vars.OPENWRT_VERSION || 'latest' }}
+          DISTRO: ${{ vars.OPENWRT_DISTRO || 'immortalwrt' }}
+          DEVICES: ${{ vars.OPENWRT_DEVICES || 'amd64,m28c' }}
+        run: |
+          if [ -n "$MATRIX_JSON" ]; then
+            printf '%s\n' "$MATRIX_JSON" > release.json
+          else
+            python3 scripts/release.py resolve --distro "$DISTRO" --devices "$DEVICES" --output release.json
+          fi
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          targets = {'include': json.loads(Path('release.json').read_text())['include']}
+          groups = json.loads(Path('package-groups.json').read_text())
+          builds = {'include': [dict(target, group=group) for target in targets['include'] for group in groups]}
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('targets=' + json.dumps(targets, separators=(',', ':')) + '\n')
+              output.write('builds=' + json.dumps(builds, separators=(',', ':')) + '\n')
+          PY
+
+  sdk:
+    needs: prepare
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
-      matrix:
-        SDK_URL:
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ipq806x/generic/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ipq806x-generic_gcc-14.3.0_musl_eabi.Linux-x86_64.tar.xz
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ipq40xx/generic/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ipq40xx-generic_gcc-14.3.0_musl_eabi.Linux-x86_64.tar.xz
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ramips/mt7621/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ramips-mt7621_gcc-14.3.0_musl.Linux-x86_64.tar.xz
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/generic/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ath79-generic_gcc-14.3.0_musl.Linux-x86_64.tar.xz
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/nand/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-ath79-nand_gcc-14.3.0_musl.Linux-x86_64.tar.xz
-        # - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/rockchip/armv8/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-rockchip-armv8_gcc-14.3.0_musl.Linux-x86_64.tar.xz
-        - https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-sdk-${{ vars.OPENWRT_VERSION }}-x86-64_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+      matrix: ${{ fromJSON(needs.prepare.outputs.targets) }}
     steps:
-    - name: Free Disk Space
-      uses: jlumbroso/free-disk-space@main
-      with:
-        large-packages: false
-    - uses: actions/checkout@main
-    - name: Env for Openwrt SDK
-      run: sudo apt update && sudo apt install -y libev-dev libc-ares-dev libudns-dev libncurses-dev libfuse-dev
-    - name: Download Openwrt SDK
-      env:
-        SDK_URL: ${{ matrix.SDK_URL }}
-      run: |
-        SDK_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $SDK_URL))
-        wget -q $SDK_URL
-        tar -xaf $(basename $SDK_URL) -C ~/
-        mv ~/$SDK_HOME ~/sdk
-        cp key-build ~/sdk/
-    - name: Download Dependency Packages and Compile
-      run: |
-        cd ~/sdk
-        # Dependency
-        #git clone -b master https://github.com/shadowsocks/openwrt-feeds package/custom
-        #sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
-        sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
-        ./scripts/feeds update -a
-        ./scripts/feeds install golang c-ares libev libopenssl libsodium mbedtls pcre libncursesw6 libudns boost-program_options
-        make defconfig
-        make download -j2
-        pushd /tmp ; git clone --depth 1 -b master  https://github.com/openwrt/packages ; popd 
-        pushd feeds/packages/lang ; rm -rf golang && cp /tmp/packages/lang/golang -r ./ ; popd
-        IGNORE_ERRORS=1 make -j2
-    - name: Download Custom Packages and Compile
-      run: |
-        cd ~/sdk        
-        # AdguarHome
-        git clone --depth 1 -b master https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
-        # Shadowsocks
-        git clone --depth 1 -b master https://github.com/shadowsocks/luci-app-shadowsocks package/luci-app-shadowsocks
-        git clone --depth 1 -b master https://github.com/shadowsocks/openwrt-shadowsocks package/shadowsocks-libev
-        git clone --depth 1 -b master https://github.com/aa65535/openwrt-simple-obfs package/simple-obfs
-        # passwall
-        pushd /tmp
-        git clone --depth 1 -b main https://github.com/Openwrt-Passwall/openwrt-passwall
-        mv openwrt-passwall/luci-app-passwall ~/sdk/package/luci-app-passwall
-        popd
-        # luci-theme-argon
-        git clone --depth 1 -b master https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
-        # Misc
-        git clone --depth 1 -b master https://github.com/aa65535/openwrt-chinadns package/chinadns
-        git clone --depth 1 -b master https://github.com/aa65535/openwrt-dns-forwarder package/dns-forwarder
-        git clone --depth 1 -b master https://github.com/aa65535/openwrt-dist-luci package/openwrt-dist-luci
-        pushd package/openwrt-dist-luci/tools/po2lmo ; make && sudo make install ; popd
-        # Clash
-        git clone --depth 1 -b master https://github.com/vernesong/OpenClash package/openclash
-        # lisaac
-        pushd /tmp
-        git clone --depth 1 -b master https://github.com/lisaac/luci-lib-docker 
-        mv luci-lib-docker/collections/luci-lib-docker ~/sdk/package/luci-lib-docker
-        git clone --depth 1 -b master https://github.com/lisaac/luci-app-dockerman
-        mv luci-app-dockerman/applications/luci-app-dockerman ~/sdk/package/luci-app-dockerman
-        git clone --depth 1 -b master https://github.com/lisaac/luci-app-diskman
-        mv luci-app-diskman/applications/luci-app-diskman ~/sdk/package/luci-app-diskman
-        popd
-        # sbwml
-        git clone --depth 1 https://github.com/sbwml/luci-app-openlist2 package/openlist
-        git clone --depth 1 -b v5 https://github.com/sbwml/luci-app-mosdns package/mosdns
-        git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-        # some packages
-        pushd /tmp
-        git clone --depth 1 -b master https://github.com/kenzok8/small
-        wget https://raw.githubusercontent.com/v2rayA/v2raya-openwrt/master/v2raya/Makefile -O small/v2raya/Makefile
-        sed -i 's/PKG_HASH:=.*/PKG_HASH:=skip/' small/xray-plugin/Makefile
-        popd
-        for subdir in /tmp/small/*; do [ -d "$subdir" ] && [ ! -d ".package/$(basename "$subdir")" ] && cp -r "$subdir" ./package/; done
-        make defconfig
-        make download -j2
-        IGNORE_ERRORS=1 make -j2
-    - name: Upload
-      env:
-        SDK_URL: ${{ matrix.SDK_URL }}
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      run: |
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $SDK_URL)
-        # Upload base only
-        cd ~/sdk/bin/packages/*/base
-        git init
-        git config user.name "bot"
-        git config user.email "bot@github.com"
-        git add .
-        git commit -m "$TAG$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push --force --quiet "https://$GITHUB_TOKEN@github.com/fangguangyang/openwrt-dist.git" HEAD:$TAG
-  buildimg:
-    name: Build Openwrt Image
-    needs: buildpkg
-    runs-on: ubuntu-20.04
+      - uses: actions/checkout@v4
+        with:
+          repository: fangguangyang/openwrt-dist
+          ref: master
+      - name: Install SDK dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang flex bison g++ gawk gcc-multilib gettext git libelf-dev libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev zstd file wget
+      - name: Cache official SDK archive
+        uses: actions/cache@v4
+        with:
+          path: .build/${{ matrix.id }}/downloads
+          key: sdk-archive-${{ matrix.sdk.sha256 }}
+      - name: Prepare one SDK and feed snapshot per architecture
+        env:
+          BUILD_METADATA: ${{ toJSON(matrix) }}
+          DEVICE: ${{ matrix.id }}
+        run: |
+          printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
+          bash scripts/prepare-sdk.sh "$RUNNER_TEMP/build.json"
+          tar -I 'zstd -T0 -3' -cf "$RUNNER_TEMP/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE" sdk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdk-${{ matrix.id }}
+          path: ${{ runner.temp }}/sdk-${{ matrix.id }}.tar.zst
+          compression-level: 0
+          retention-days: 1
+
+  build:
+    name: ${{ matrix.id }} / ${{ matrix.group }}
+    needs: [prepare, sdk]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - PROFILE: generic.x86_64
-            IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/x86/64/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-x86-64.Linux-x86_64.tar.zst
-            PACKAGES: ca-bundle ca-certificates block-mount usbutils coreutils coreutils-base64 curl iperf3 ip-full kmod-ipt-tproxy kmod-nft-tproxy ebtables kmod-ebtables-ipv6
-            INCLUDE_FILES: false
-            ROOTFS_PARTSIZE: 4000
-        # - PROFILE: asus_rt-ac58u
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ipq40xx/generic/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ipq40xx-generic.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates block-mount usbutils coreutils coreutils-base64 curl iperf3 ip-full kmod-ipt-tproxy kmod-nft-tproxy kmod-usb-storage-extras kmod-usb-storage-uas kmod-fs-exfat kmod-fs-vfat kmod-fs-ntfs kmod-fs-ext4 kmod-ipt-nat6 kmod-tun dosfstools ntfs-3g e2fsprogs fdisk libmbedtls luci luci-app-wireguard luci-app-samba4 luci-app-shadowsocks luci-app-smartdns luci-app-dns-forwarder stubby luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-i18n-samba4-zh-cn luci-i18n-smartdns-zh-cn mount-utils shadowsocks-libev smartdns uhttpd iperf3 mtr htop tmux nano lsblk luci-i18n-wol-zh-cn ethtool tcpdump wpad-mbedtls -wpad-basic-mbedtls dnsmasq-full -dnsmasq miniupnpd luci-app-upnp
-        #   INCLUDE_FILES: true
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: asus_rt-ac58u.master
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ipq40xx/generic/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ipq40xx-generic.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates luci luci-i18n-base-zh-cn wget curl luci-i18n-firewall-zh-cn wpad-mbedtls -wpad-basic-mbedtls coreutils-base64 lsblk fdisk tmux nano luci-i18n-wol-zh-cn openssh-client tcpdump iperf3 mtr iptables-mod-tproxy ip shadowsocks-libev luci-app-shadowsocks luci-app-chinadns stubby shadowsocks-libev-server kmod-fs-vfat kmod-fs-ext4 kmod-usb-storage-extras iptables-mod-iprange iptables-mod-hashlimit kmod-ipt-nat6 kmod-ip6tables-extra kmod-ip6-tunnel miniupnpd luci-app-upnp block-mount luci-app-wireguard
-        #   INCLUDE_FILES: false
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: netgear_r6220.master
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ramips/mt7621/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ramips-mt7621.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates luci luci-i18n-base-zh-cn wget curl luci-i18n-firewall-zh-cn wpad-mbedtls -wpad-basic-mbedtls coreutils-base64 lsblk fdisk tmux nano luci-i18n-wol-zh-cn openssh-client tcpdump iperf3 mtr iptables-mod-tproxy ip shadowsocks-libev luci-app-shadowsocks luci-app-chinadns stubby shadowsocks-libev-server kmod-fs-vfat kmod-fs-ext4 kmod-usb-storage-extras iptables-mod-iprange iptables-mod-hashlimit kmod-ipt-nat6 kmod-ip6tables-extra kmod-ip6-tunnel miniupnpd luci-app-upnp block-mount ndppd
-        #   INCLUDE_FILES: false
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: netgear_r6220.relay
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ramips/mt7621/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ramips-mt7621.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates luci luci-i18n-base-zh-cn wget curl luci-i18n-firewall-zh-cn wpad-mbedtls -wpad-basic-mbedtls coreutils-base64 lsblk fdisk tmux nano luci-i18n-wol-zh-cn openssh-client iperf3 mtr ip kmod-fs-vfat kmod-fs-ext4 kmod-usb-storage-extras block-mount
-        #   INCLUDE_FILES: false
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: qihoo_c301
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/generic/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ath79-generic.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates curl luci luci-app-wireguard luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn uhttpd wpad-mbedtls -wpad-basic-mbedtls
-        #   INCLUDE_FILES: false
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: qihoo_c301.relay
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ath79/generic/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ath79-generic.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates luci luci-i18n-base-zh-cn wget curl luci-i18n-firewall-zh-cn wpad-mbedtls -wpad-basic-mbedtls coreutils-base64 lsblk fdisk tmux nano luci-i18n-wol-zh-cn openssh-client iperf3 mtr ip kmod-fs-vfat kmod-fs-ext4 kmod-usb-storage-extras block-mount
-        #   INCLUDE_FILES: false
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: d-team_newifi-d2.sun
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ramips/mt7621/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ramips-mt7621.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates block-mount usbutils coreutils curl iperf3 ip-full kmod-ipt-tproxy kmod-nft-tproxy kmod-usb-storage-extras kmod-usb-storage-uas kmod-fs-exfat kmod-fs-vfat kmod-fs-ntfs kmod-ipt-nat6 kmod-tun ntfs-3g libmbedtls luci luci-app-wireguard luci-app-samba4 luci-app-shadowsocks luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-i18n-samba4-zh-cn mount-utils shadowsocks-libev uhttpd mtr htop tmux nano luci-i18n-wol-zh-cn ethtool tcpdump wpad-mbedtls -wpad-basic-mbedtls dnsmasq-full -dnsmasq openvpn-mbedtls luci-app-openvpn zerotier
-        #   INCLUDE_FILES: true
-        #   ROOTFS_PARTSIZE: 0
-        # - PROFILE: friendlyarm_nanopi-r2s
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/rockchip/armv8/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-rockchip-armv8.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates block-mount usbutils curl iperf3 iperf3 mtr htop tmux nano lsblk ethtool tcpdump ip-full kmod-ipt-tproxy kmod-nft-tproxy kmod-usb-storage-extras kmod-fs-exfat kmod-fs-vfat kmod-fs-ntfs kmod-fs-ext4 kmod-ipt-nat6 kmod-tun dosfstools ntfs-3g e2fsprogs fdisk exfat-fsck exfat-mkfs libmbedtls luci luci-compat luci-app-openclash kmod-inet-diag libcap-bin luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-i18n-ksmbd-zh-cn ksmbd-avahi-service wsdd2 luci-i18n-nlbwmon-zh-cn luci-i18n-aria2-zh-cn ariang luci-i18n-transmission-zh-cn mount-utils uhttpd luci-i18n-wol-zh-cn dnsmasq-full -dnsmasq zerotier luci-i18n-ttyd-zh-cn luci-i18n-dockerman-zh-cn dockerd luci-app-vlmcsd netdata luci-i18n-sqm-zh-cn
-        #   INCLUDE_FILES: true
-        #   ROOTFS_PARTSIZE: 500
-        # - PROFILE: netgear_r7800
-        #   IB_URL: https://downloads.openwrt.org/releases/${{ vars.OPENWRT_VERSION }}/targets/ipq806x/generic/openwrt-imagebuilder-${{ vars.OPENWRT_VERSION }}-ipq806x-generic.Linux-x86_64.tar.xz
-        #   PACKAGES: ca-bundle ca-certificates block-mount usbutils coreutils coreutils-base64 curl iperf3 ip-full kmod-ipt-tproxy kmod-nft-tproxy kmod-usb-storage-extras kmod-usb-storage-uas kmod-fs-exfat kmod-fs-vfat kmod-fs-ntfs kmod-fs-ext4 kmod-ipt-nat6 kmod-tun dosfstools ntfs-3g e2fsprogs fdisk libmbedtls luci luci-app-wireguard luci-app-samba4 luci-app-shadowsocks luci-app-smartdns luci-app-dns-forwarder luci-app-openclash kmod-inet-diag stubby luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn luci-i18n-opkg-zh-cn luci-i18n-samba4-zh-cn luci-i18n-smartdns-zh-cn mount-utils shadowsocks-libev smartdns uhttpd iperf3 mtr htop tmux nano lsblk luci-i18n-wol-zh-cn ethtool tcpdump wpad-mbedtls -wpad-basic-mbedtls dnsmasq-full -dnsmasq
-        #   INCLUDE_FILES: true
-        #   ROOTFS_PARTSIZE: 0
+      max-parallel: ${{ fromJSON(vars.BUILD_MAX_PARALLEL || '12') }}
+      matrix: ${{ fromJSON(needs.prepare.outputs.builds) }}
     steps:
-    - uses: actions/checkout@main
-    - name: Env for Openwrt ImageBuilder
-      run: sudo apt install -y libncurses-dev
-    - name: Download Openwrt ImageBuilder
-      env:
-        IB_URL: ${{ matrix.IB_URL }}
-      run: |
-        wget -q $IB_URL
-        tar -xaf $(basename $IB_URL)
-    - name: Fetch Files
-      env:
-        IB_URL: ${{ matrix.IB_URL }}
-      if: matrix.INCLUDE_FILES
-      run: |
-        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
-        cd $IB_HOME
-        mkdir -p files/root/
-        mkdir -p files/etc/opkg/
-        cp ../brainiac-dist.pub files/root/
-        echo "src/gz brainiac https://cdn.jsdelivr.net/gh/fangguangyang/openwrt-dist@$TAG" > files/etc/opkg/customfeeds.conf
-    - name: Build Image
-      shell: bash
-      env:
-        PROFILE: ${{ matrix.PROFILE }}
-        IB_URL: ${{ matrix.IB_URL }}
-        PACKAGES: ${{ matrix.PACKAGES }}
-        ROOTFS_PARTSIZE: ${{ matrix.ROOTFS_PARTSIZE }}
-      run: |
-        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1_\2/p' <<< $IB_URL)
-        cd $IB_HOME
-        sed -i "/check_signature/d" repositories.conf
-        echo "src/gz brainiac https://github.com/fangguangyang/openwrt-dist/raw/$TAG" >> repositories.conf
-        makeopts=("PROFILE=${PROFILE%.*}" "PACKAGES=$PACKAGES")
-        [[ -d files ]] && makeopts+=("FILES=files/")
-        [[ $ROOTFS_PARTSIZE -gt 0 ]] && makeopts+=("ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE")
-        make info
-        TERM=xterm-256color make image "${makeopts[@]}"
-    - name: Upload
-      id: upload
-      env:
-        PROFILE: ${{ matrix.PROFILE }}
-        IB_URL: ${{ matrix.IB_URL }}
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      run: |
-        IB_HOME=$(sed 's/\.\(tar\|zip\|rar\)\..*$//' <<< $(basename $IB_URL))
-        TAG=$(sed -n 's/.*targets\/\(\w*\)\/\(\w*\)\/.*/packages\/\1\/\2/p' <<< $IB_URL)
-        # Prepare Release
-        ARTIFACTPATH="$(pwd)/image"
-        mkdir -p $ARTIFACTPATH
-        # Upload image
-        cd $IB_HOME/bin/targets/$(cut -b 10- <<< $TAG)
-        cp * $ARTIFACTPATH
-        git init
-        git config user.name "bot"
-        git config user.email "bot@github.com"
-        git add .
-        git commit -m "$PROFILE$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push --force --quiet "https://$GITHUB_TOKEN@github.com/fangguangyang/openwrt-dist.git" HEAD:image/$PROFILE
-    - uses: actions/upload-artifact@main
-      with:
-        name: image_${{ matrix.PROFILE }}
-        path: ./image
+      - name: Free disk space for Go and Rust builds
+        uses: jlumbroso/free-disk-space@main
+        with:
+          large-packages: false
+      - uses: actions/checkout@v4
+        with:
+          repository: fangguangyang/openwrt-dist
+          ref: master
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang flex bison g++ gawk gcc-multilib gettext git libelf-dev libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev zstd file wget
+      - uses: actions/download-artifact@v4
+        with:
+          name: sdk-${{ matrix.id }}
+          path: ${{ runner.temp }}/sdk
+      - name: Restore prepared SDK
+        env:
+          DEVICE: ${{ matrix.id }}
+        run: |
+          mkdir -p ".build/$DEVICE"
+          tar -xf "$RUNNER_TEMP/sdk/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE"
+      - name: Cache downloads and compiled host toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build/${{ matrix.id }}/sdk/dl
+            .build/${{ matrix.id }}/sdk/build_dir/hostpkg
+            .build/${{ matrix.id }}/sdk/staging_dir/hostpkg
+            .build/${{ matrix.id }}/sdk/build_dir/target-*/host
+            .build/${{ matrix.id }}/sdk/staging_dir/target-*/host
+            .build/${{ matrix.id }}/sdk/tmp/go-build
+          key: packages-${{ matrix.sdk.sha256 }}-${{ matrix.group }}-${{ hashFiles('package-groups.json', 'packages-m28c.txt', 'scripts/**', 'feeds.conf.custom', 'feed-overrides.txt', 'single-packages.json') }}-${{ hashFiles(format('.build/{0}/sdk/sources.json', matrix.id)) }}
+          restore-keys: |
+            packages-${{ matrix.sdk.sha256 }}-${{ matrix.group }}-
+      - name: Compile this software group
+        env:
+          BUILD_METADATA: ${{ toJSON(matrix) }}
+          GROUP: ${{ matrix.group }}
+          BUILD_JOBS: ${{ vars.BUILD_JOBS || '4' }}
+        run: |
+          printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
+          bash scripts/build-packages.sh "$RUNNER_TEMP/build.json" "$GROUP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.id }}-${{ matrix.group }}
+          path: parts/${{ matrix.id }}/${{ matrix.group }}/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 3
+
+  publish:
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.targets) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: fangguangyang/openwrt-dist
+          ref: master
+      - name: Install index dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gawk libncurses-dev libssl-dev python3 rsync unzip zstd file wget
+      - uses: actions/download-artifact@v4
+        with:
+          name: sdk-${{ matrix.id }}
+          path: ${{ runner.temp }}/sdk
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: packages-${{ matrix.id }}-*
+          path: parts
+      - name: Merge, sign and publish the complete repository
+        env:
+          BUILD_METADATA: ${{ toJSON(matrix) }}
+          DEVICE: ${{ matrix.id }}
+          GH_TOKEN: ${{ secrets.TOKEN || github.token }}
+        run: |
+          mkdir -p ".build/$DEVICE"
+          tar -xf "$RUNNER_TEMP/sdk/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE"
+          printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
+          bash scripts/sign-feed.sh "$RUNNER_TEMP/build.json" parts
+          bash scripts/publish-feed.sh "$RUNNER_TEMP/build.json" "repository/$DEVICE" fangguangyang/openwrt-dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: feed-result-${{ matrix.id }}
+          path: feed-results/${{ matrix.id }}.json
+
+  results:
+    needs: publish
+    runs-on: ubuntu-24.04
+    outputs:
+      repositories: ${{ steps.collect.outputs.repositories }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: feed-result-*
+          path: feed-results
+          merge-multiple: true
+      - name: Collect immutable feed commits
+        id: collect
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          repositories = {}
+          for path in Path('feed-results').glob('*.json'):
+              repositories.update(json.loads(path.read_text()))
+          if not repositories:
+              raise SystemExit('No package repositories were published')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('repositories=' + json.dumps(repositories, separators=(',', ':')) + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Published package commits:\n\n')
+              summary.write('\n'.join(f'- {device}: `{commit}`' for device, commit in repositories.items()))
+          PY

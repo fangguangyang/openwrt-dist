@@ -1,0 +1,6 @@
+.build/
+repository/
+parts/
+feed-results/
+release.json
+__pycache__/
