@@ -109,6 +109,12 @@ jobs:
           path: ${{ runner.temp }}/sdk-${{ matrix.id }}.tar.zst
           compression-level: 0
           retention-days: 1
+      - name: Share source lock with prebuilt package jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: sources-${{ matrix.id }}
+          path: .build/${{ matrix.id }}/sdk/sources.json
+          retention-days: 1
 
   build:
     name: ${{ matrix.id }} / ${{ matrix.group }}
@@ -121,6 +127,7 @@ jobs:
       matrix: ${{ fromJSON(needs.prepare.outputs.builds) }}
     steps:
       - name: Free disk space for Go and Rust builds
+        if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         uses: jlumbroso/free-disk-space@main
         with:
           large-packages: false
@@ -129,20 +136,41 @@ jobs:
           repository: fangguangyang/openwrt-dist
           ref: master
       - name: Install build dependencies
+        if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential clang cmake ninja-build flex bison g++ gawk gcc-multilib gettext git libelf-dev libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev zstd file wget
       - uses: actions/download-artifact@v4
+        if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         with:
           name: sdk-${{ matrix.id }}
           path: ${{ runner.temp }}/sdk
       - name: Restore prepared SDK
+        if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         env:
           DEVICE: ${{ matrix.id }}
         run: |
           mkdir -p ".build/$DEVICE"
           tar -xf "$RUNNER_TEMP/sdk/sdk-$DEVICE.tar.zst" -C ".build/$DEVICE"
+      - name: Download source lock for prebuilt packages
+        if: ${{ matrix.group == 'openclash' || matrix.group == 'passwall' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: sources-${{ matrix.id }}
+          path: .build/${{ matrix.id }}/sdk
+      - name: Install prebuilt package download dependencies
+        if: ${{ matrix.group == 'openclash' || matrix.group == 'passwall' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 zstd
+      - name: Cache official ImageBuilder for prebuilt packages
+        if: ${{ matrix.group == 'openclash' || matrix.group == 'passwall' }}
+        uses: actions/cache@v4
+        with:
+          path: .build/${{ matrix.id }}/downloads
+          key: prebuilt-imagebuilder-${{ matrix.imagebuilder.sha256 }}
       - name: Cache downloads and compiled host toolchains
+        if: ${{ matrix.group != 'openclash' && matrix.group != 'passwall' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -156,7 +184,7 @@ jobs:
           key: packages-local-llvm-v1-${{ matrix.sdk.sha256 }}-${{ matrix.group }}-${{ hashFiles('package-groups.json', 'packages-m28c.txt', 'scripts/**', 'feeds.conf.custom', 'feed-overrides.txt', 'single-packages.json') }}-${{ hashFiles(format('.build/{0}/sdk/sources.json', matrix.id)) }}
           restore-keys: |
             packages-local-llvm-v1-${{ matrix.sdk.sha256 }}-${{ matrix.group }}-
-      - name: Compile this software group
+      - name: Build or fetch this software group
         env:
           BUILD_METADATA: ${{ toJSON(matrix) }}
           GROUP: ${{ matrix.group }}
@@ -164,6 +192,17 @@ jobs:
         run: |
           printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
           bash scripts/build-packages.sh "$RUNNER_TEMP/build.json" "$GROUP"
+      - name: Upload build diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.id }}-${{ matrix.group }}
+          path: |
+            .build/${{ matrix.id }}/sdk/logs/
+            .build/${{ matrix.id }}/sdk/.config
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 3
       - uses: actions/upload-artifact@v4
         with:
           name: packages-${{ matrix.id }}-${{ matrix.group }}

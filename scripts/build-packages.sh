@@ -8,6 +8,9 @@ manager=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["packa
 group=${2:?Software group is required}
 work="$root/.build/$device"
 repo="$root/parts/$device/$group"
+if [[ $group == openclash || $group == passwall ]]; then
+    exec python3 "$root/scripts/fetch-prebuilt.py" "$metadata" "$group" "$repo" "$work/sdk/sources.json"
+fi
 mkdir -p "$repo"
 cd "$work/sdk"
 export GIT_AUTHOR_NAME='OpenWrt Build Bot' GIT_AUTHOR_EMAIL='bot@users.noreply.github.com'
@@ -29,9 +32,11 @@ python3 - "${packages[@]}" <<'PY'
 from pathlib import Path
 import sys
 p = Path('.config')
-lines = [s for s in (p.read_text() if p.exists() else '').splitlines() if not s.startswith(('CONFIG_PACKAGE_', '# CONFIG_PACKAGE_', 'CONFIG_ALL', '# CONFIG_ALL', 'CONFIG_SIGN_EACH_PACKAGE', '# CONFIG_SIGN_EACH_PACKAGE'))]
+lines = [s for s in (p.read_text() if p.exists() else '').splitlines() if not s.startswith(('CONFIG_PACKAGE_', '# CONFIG_PACKAGE_', 'CONFIG_ALL', '# CONFIG_ALL', 'CONFIG_SIGN_EACH_PACKAGE', '# CONFIG_SIGN_EACH_PACKAGE', 'CONFIG_RUBY_ENABLE_YJIT', '# CONFIG_RUBY_ENABLE_YJIT'))]
 lines += ['# CONFIG_ALL is not set', '# CONFIG_ALL_NONSHARED is not set', '# CONFIG_ALL_KMODS is not set',
-          'CONFIG_SIGNED_PACKAGES=y', '# CONFIG_SIGN_EACH_PACKAGE is not set', 'CONFIG_LUCI_LANG_zh_Hans=y']
+          'CONFIG_SIGNED_PACKAGES=y', '# CONFIG_SIGN_EACH_PACKAGE is not set', 'CONFIG_LUCI_LANG_zh_Hans=y',
+          '# CONFIG_RUBY_ENABLE_YJIT is not set']
+# OpenClash uses Ruby for scripts/YAML; optional YJIT would build Rust and LLVM.
 lines += ['CONFIG_PACKAGE_' + package + '=m' for package in sys.argv[1:]]
 if 'luci-app-passwall' in sys.argv[1:]:
     lines += ['CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y',
@@ -46,14 +51,24 @@ config = set(Path('.config').read_text().splitlines())
 missing = [p for p in sys.argv[1:] if not any(f'CONFIG_PACKAGE_{p}={s}' in config for s in ('y', 'm'))]
 if missing:
     sys.exit('Unavailable packages for this SDK: ' + ', '.join(missing))
+if 'CONFIG_RUBY_ENABLE_YJIT=y' in config:
+    sys.exit('Ruby YJIT must be disabled to avoid an optional Rust toolchain build')
 PY
 if [[ $manager == apk ]]; then
     grep -qx 'CONFIG_USE_APK=y' .config
 else
     ! grep -qx 'CONFIG_USE_APK=y' .config
 fi
-make download -j"${BUILD_JOBS:-$(nproc)}"
-make -j"${BUILD_JOBS:-$(nproc)}" || make -j1 V=s
+jobs=${BUILD_JOBS:-$(nproc)}
+printf 'Building %s / %s with %s jobs; Ruby YJIT disabled\n' "$device" "$group" "$jobs"
+printf 'Requested packages: %s\n' "${packages[*]}"
+printf 'Downloading sources\n'
+make download -j"$jobs" V=s BUILD_LOG=1
+printf 'Compiling packages (including host toolchains); detailed logs: %s/logs\n' "$work/sdk"
+if ! make -j"$jobs" V=s BUILD_LOG=1; then
+    printf 'Parallel build failed; retrying with one job for diagnostics\n'
+    make -j1 V=s BUILD_LOG=1
+fi
 
 # Collect this group's dependencies from every feed, not only the base feed.
 # The publish job signs the combined repository after all groups succeed.

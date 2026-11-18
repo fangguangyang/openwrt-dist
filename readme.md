@@ -1,6 +1,6 @@
 # OpenWrt dist
 
-为 amd64（`x86/64`）及 Widora MangoPi M28C（`rockchip/armv8`，RK3528）编译自定义软件源。默认使用 [ImmortalWrt 最新稳定版](https://downloads.immortalwrt.org/) 的官方 SDK，自动识别架构、SDK 文件名及 opkg/apk 格式，并验证下载文件的 SHA256。
+为 amd64（`x86/64`）及 Widora MangoPi M28C（`rockchip/armv8`，RK3528）生成自定义软件源。OpenClash、PassWall 两组使用与固件版本和架构匹配的官方预编译包，其余软件使用 [ImmortalWrt 最新稳定版](https://downloads.immortalwrt.org/) 的官方 SDK 编译。自动识别 SDK/ImageBuilder 文件名及 opkg/apk 格式，并验证下载归档的 SHA256。
 
 ## 运行方式
 
@@ -34,25 +34,31 @@ python3 scripts/signing-key.py generate opkg --usign /path/to/sdk/staging_dir/ho
 
 ## 并发编译
 
-每个架构的 SDK 和源码 feeds 只准备一次，作为 artifact 分发给 6 个独立编译任务：
+每个架构的 SDK 和源码 feeds 只准备一次，4 个组使用 SDK 编译，另外 2 个组下载官方预编译包：
 
-| 软件组 | 主要软件 |
-| --- | --- |
-| `openclash` | OpenClash |
-| `passwall` | PassWall、Xray、V2Ray Plugin、Simple Obfs、Shadowsocks Rust |
-| `mosdns` | MosDNS 核心及 LuCI |
-| `openlist` | OpenList2 核心及 LuCI |
-| `storage` | Dockerman、Diskman |
-| `platform` | AdGuardHome、Argon、Modemband、SMS Tool；M28C 额外添加 Design、iStore、QuickStart、FM350 USB 拨号及 3ginfo-lite |
+| 软件组 | 主要软件 | 方式 |
+| --- | --- | --- |
+| `openclash` | OpenClash | 官方预编译包 |
+| `passwall` | PassWall、Xray、V2Ray Plugin、Simple Obfs、Shadowsocks Rust | 官方预编译包 |
+| `mosdns` | MosDNS 核心及 LuCI | SDK 编译 |
+| `openlist` | OpenList2 核心及 LuCI | SDK 编译 |
+| `storage` | Dockerman、Diskman | SDK 编译 |
+| `platform` | AdGuardHome、Argon、Modemband、SMS Tool；M28C 额外添加 Design、iStore、QuickStart、FM350 USB 拨号及 3ginfo-lite | SDK 编译 |
 
-默认两种架构最多 **12 个任务并发**，每个任务 `make -j4`。可选 Variables：
+OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获取包管理器、软件源地址和公钥，原生 apk/opkg 验证官方索引及包内容。这两组不下载 SDK artifact、不恢复编译工具链、不调用 make，只下载 `package-groups.json` 中列出的软件包；普通运行依赖继续由设备或 ImageBuilder 的同版本官方源提供。合并后沿用现有签名和 Release 地址。预编译包的文件名、SHA256 和来源写入 `build-configs.tar.gz` 内的 `*.prebuilt.json`，版本以官方源为准。
+
+所选发行版、版本、架构缺少现成包时直接失败，不回退自编译或混用其他版本。默认 ImmortalWrt 提供这两组软件；选择上游 OpenWrt 前需确认其官方源是否包含它们。
+
+默认两种架构最多 **12 个任务并发**，其中编译任务使用 `make -j4`，预编译下载任务不运行 make。可选 Variables：
 
 - `BUILD_MAX_PARALLEL`：最大同时构建的任务数，默认 `12`。实际受 GitHub 账号并发配额限制。
-- `BUILD_JOBS`：单任务 make 并行度，默认 `4`，应与 runner CPU/内存匹配。
+- `BUILD_JOBS`：单个编译任务的 make 并行度，默认 `4`，不影响预编译下载任务。
 - `OPENWRT_DISTRO`：默认 `immortalwrt`。
 - `OPENWRT_DEVICES`：默认 `amd64,m28c`。官方 OpenWrt 没有 M28C profile 时必须选 `amd64`。
 
 缓存包括 SDK 下载、源码下载、编译后的 host 工具链及 Go build/module 缓存。缓存按 SDK 校验和和软件组隔离，源码提交变化会产生新 key。首次无缓存仍需编译；总耗时取决于最慢的软件组和 runner 排队，发布前必须等所有组成功。
+
+下载和编译从开始就使用 `V=s BUILD_LOG=1`，显示 Rust/LLVM 等长任务的内部进度；每组结束后上传 `build-logs-<设备>-<软件组>` artifact，包含分包日志和 SDK 配置，失败时也保留。
 
 ## 软件清单和依赖
 
@@ -66,10 +72,10 @@ python3 scripts/signing-key.py generate opkg --usign /path/to/sdk/staging_dir/ho
 - 选择上游 OpenWrt 构建 amd64 时，从对应版本系列的 ImmortalWrt LuCI feed 补充 AdGuardHome、Modemband、SMS Tool 界面；核心和编译工具链仍使用 OpenWrt SDK。
 - Design 主题的日期版本后缀会规范为 apk 接受的格式；该兼容修改摘要也写入源码锁定信息。
 - SDK 中解除 curl 选项的外层菜单依赖，修复冻结 libc 配置与 LDAP 选项形成的 Kconfig 循环；保留包依赖及原有默认功能。
-- Rust 配方固定 `llvm.download-ci-llvm=false`，从 Rust 源码包编译 LLVM，避免 CI 临时预编译产物失效后下载 404。首次编译耗时增加，后续复用 host 工具链缓存；兼容修改计入 `sources.json`，缓存前缀已更新以排除旧的 Rust 配置。
-- 最新 ImmortalWrt feeds 已移除独立 `luci-app-shadowsocks-libev`；旧 `luci-app-shadowsocks` / `openwrt-dist-luci` 的 Shadowsocks 功能统一改由 PassWall 管理，并构建持续维护的 Shadowsocks Rust 客户端/服务端。不再运行手工安装的 po2lmo、跳过 `PKG_HASH` 或复制一整份重名 small 源。
+- SDK 保留 `llvm.download-ci-llvm=false` 的兼容修改，供仍需 Rust 的自编译软件使用，摘要计入 `sources.json`。OpenClash、PassWall 两组使用预编译包，不再进入 Rust/LLVM 或 Ruby 编译步骤。
+- 最新 ImmortalWrt feeds 已移除独立 `luci-app-shadowsocks-libev`；旧 `luci-app-shadowsocks` / `openwrt-dist-luci` 的 Shadowsocks 功能统一改由 PassWall 管理，并提供官方预编译的 Shadowsocks Rust 客户端/服务端。不再运行手工安装的 po2lmo、跳过 `PKG_HASH` 或复制一整份重名 small 源。
 
-各组只选择自己的软件及依赖。缺包、编译错误、不同源提交、缺组或同名异内容的软件包都会让构建失败，不使用 `IGNORE_ERRORS=1`。收集所有 feed 输出后统一生成并签名索引，避免原流程仅上传 `base` 而丢失软件。
+编译组只选择自己的软件及依赖；预编译组只下载清单指定的软件，普通依赖由同版本官方源提供。缺包、编译错误、不同源提交、缺组或同名异内容的软件包都会让构建失败，不使用 `IGNORE_ERRORS=1`。收集所有组输出后统一生成并签名索引。
 
 ## 软件源产物（GitHub Releases）
 

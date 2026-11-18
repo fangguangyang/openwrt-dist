@@ -31,4 +31,7 @@ cp sources.json "$repo/sources.json"
 mkdir -p "$repo/build-configs"
 for part in "$parts"/*; do
     cp "$part/sdk.config" "$repo/build-configs/$(basename "$part").config"
+    if [[ -f $part/prebuilt.json ]]; then
+        cp "$part/prebuilt.json" "$repo/build-configs/$(basename "$part").prebuilt.json"
+    fi
 done
