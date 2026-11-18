@@ -6,7 +6,11 @@ parts=$(realpath "${2:?Package parts directory required}")
 device=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$metadata")
 manager=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_manager"])' "$metadata")
 repo="$root/repository/$device"
-python3 "$root/scripts/merge-feed.py" "$metadata" "$parts" "$repo"
+merge_args=("$metadata" "$parts" "$repo")
+if [[ $manager == apk ]]; then
+    merge_args+=(--apk "$root/.build/$device/sdk/staging_dir/host/bin/apk")
+fi
+python3 "$root/scripts/merge-feed.py" "${merge_args[@]}"
 cp "$metadata" "$repo/build.json"
 cd "$root/.build/$device/sdk"
 make defconfig

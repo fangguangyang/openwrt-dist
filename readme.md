@@ -77,7 +77,9 @@ OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获�
 - SDK 保留 `llvm.download-ci-llvm=false` 的兼容修改，供仍需 Rust 的自编译软件使用，摘要计入 `sources.json`。OpenClash、PassWall 两组使用预编译包，不再进入 Rust/LLVM 或 Ruby 编译步骤。
 - 最新 ImmortalWrt feeds 已移除独立 `luci-app-shadowsocks-libev`；旧 `luci-app-shadowsocks` / `openwrt-dist-luci` 的 Shadowsocks 功能统一改由 PassWall 管理，并提供官方预编译的 Shadowsocks Rust 客户端/服务端。不再运行手工安装的 po2lmo、跳过 `PKG_HASH` 或复制一整份重名 small 源。
 
-编译组只选择自己的软件及依赖；预编译组只下载清单指定的软件，普通依赖由同版本官方源提供。缺包、编译错误、不同源提交、缺组或同名异内容的软件包都会让构建失败，不使用 `IGNORE_ERRORS=1`。收集所有组输出后统一生成并签名索引。
+编译组只选择自己的软件及依赖；预编译组只下载清单指定的软件。合并时发布 `package-groups.json` 和设备附加清单中的指定软件，以及来自自定义 feed 的依赖；未被明确指定的 `base` / `luci` / `packages` / `routing` / `telephony` 公共依赖由同版本官方源提供，不重复发布各组生成的 `luci-base` 等基础包。MosDNS、OpenList、iStore 等自定义 feed 的核心和配套依赖仍保留。
+
+自定义包同名异内容、缺少指定软件、不同源提交或缺组仍会让构建失败，不使用 `IGNORE_ERRORS=1`，也不随意选择某组的包覆盖冲突。所有输入检查通过后才复制并签名发布。`merge-report.json` 记录保留、排除、重复和冲突的包；发布失败时也单独上传 `merge-report-<设备>` artifact。此合并规则可直接处理已完成的各组 artifact，修复合并逻辑后只需重跑失败的发布任务，无需重新编译各组。
 
 ## 软件源产物（GitHub Releases）
 
@@ -95,7 +97,7 @@ packages-immortalwrt-25.12.2-rockchip-armv8
 | apk | `packages.adb` | 单独的 `.apk` 附件 | `feed-key.pem` |
 | opkg | `Packages`、`Packages.gz`、`Packages.sig` | 单独的 `.ipk` 附件 | `feed-key.pub` |
 
-另有 `build.json`、`sources.json`、`sha256sums` 和 `build-configs.tar.gz`。SDK 和各组中间产物仍作为 Actions artifact 临时传递。首次创建草稿 Release，附件校验完成后公开；后续同版本/target 构建直接更新已有 Release。先上传新软件包，最后替换索引并核对名称、大小和 GitHub SHA256，成功后清理过期软件包。构建 ID、执行轮次和源码提交保留在 `build.json`，不进入 tag。
+另有 `build.json`、`sources.json`、`merge-report.json`、`sha256sums` 和 `build-configs.tar.gz`。SDK 和各组中间产物仍作为 Actions artifact 临时传递。首次创建草稿 Release，附件校验完成后公开；后续同版本/target 构建直接更新已有 Release。先上传新软件包，最后替换索引并核对名称、大小和 GitHub SHA256，成功后清理过期软件包。构建 ID、执行轮次和源码提交保留在 `build.json`，不进入 tag。
 
 APK 使用签名索引中的 `${name}-${hash}.apk` 下载规则；opkg 文件名同样带内容摘要，并在规范化后重新索引。包内部版本和内容保留，避免 GitHub 调整附件名后出现下载 404；新旧软件包可在替换索引前共存。设备和 LuCI 仍按正常包名安装、显示版本。
 

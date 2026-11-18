@@ -250,6 +250,14 @@ jobs:
           printf '%s\n' "$BUILD_METADATA" > "$RUNNER_TEMP/build.json"
           bash scripts/sign-feed.sh "$RUNNER_TEMP/build.json" parts
           bash scripts/publish-feed.sh "$RUNNER_TEMP/build.json" "repository/$DEVICE" fangguangyang/openwrt-dist
+      - name: Upload package merge report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: merge-report-${{ matrix.id }}
+          path: repository/${{ matrix.id }}/merge-report.json
+          if-no-files-found: ignore
+          retention-days: 3
       - uses: actions/upload-artifact@v7
         with:
           name: feed-result-${{ matrix.id }}
