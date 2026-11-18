@@ -80,7 +80,7 @@ def gh_api(endpoint, method="GET", payload=None):
     return value
 
 
-def validate_uploaded(files, uploaded, feed_url, allow_extra=False):
+def validate_uploaded(files, uploaded, feed_url, allow_extra=False, check_urls=True):
     actual = {asset["name"]: asset for asset in uploaded}
     wanted = {path.name for path in files}
     if len(actual) != len(uploaded) or not wanted <= set(actual) or (not allow_extra and set(actual) != wanted):
@@ -89,8 +89,10 @@ def validate_uploaded(files, uploaded, feed_url, allow_extra=False):
         asset = actual[path.name]
         if asset["state"] != "uploaded" or asset["size"] != path.stat().st_size:
             raise ValueError("Incomplete release upload: " + path.name)
-        if asset["browser_download_url"] != feed_url + "/" + path.name:
-            raise ValueError("Unexpected release download URL: " + path.name)
+        expected_url = feed_url + "/" + path.name
+        if check_urls and asset.get("browser_download_url") != expected_url:
+            raise ValueError(f"Unexpected release download URL: {path.name}: "
+                             f"expected {expected_url!r}, got {asset.get('browser_download_url')!r}")
         if asset.get("digest") != "sha256:" + sha256(path):
             raise ValueError("Release asset checksum mismatch: " + path.name)
 
@@ -153,15 +155,19 @@ def publish(metadata, directory, repository, source_commit, run_id, attempt, api
         changed = [p for p in phase if not same_asset(existing.get(p.name, {}), p)]
         if changed:
             upload(changed, clobber=position > 0)
-    # Old package assets remain available until the new indexes are verified.
+    # Draft assets can have temporary /untagged-.../ URLs. Verify all content
+    # before publishing, then require the final URLs after the draft is public.
+    validate_uploaded(files, list_assets(repository, current["id"], api), feed_url,
+                      allow_extra=True, check_urls=not current.get("draft", False))
+    api(f"repos/{repository}/releases/{current['id']}", "PATCH", {
+        "draft": False, "make_latest": "false", "name": name, "body": body,
+    })
     validate_uploaded(files, list_assets(repository, current["id"], api), feed_url, allow_extra=True)
+    # Old package assets remain available until the public URLs are verified.
     wanted = {path.name for path in files}
     for asset in original:
         if asset["name"].endswith((".apk", ".ipk")) and asset["name"] not in wanted:
             api(f"repos/{repository}/releases/assets/{asset['id']}", "DELETE")
-    api(f"repos/{repository}/releases/{current['id']}", "PATCH", {
-        "draft": False, "make_latest": "false", "name": name, "body": body,
-    })
     return feed_url
 
 

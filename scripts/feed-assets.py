@@ -37,11 +37,18 @@ def normalize_apk_names(directory, sdk):
         if output.exists():
             raise ValueError("Duplicate release asset: " + output.name)
         original.rename(output)
-    # APK uses the signed specification to construct package URLs. A content
-    # hash avoids GitHub sanitizing '+' or '~' in a version-derived filename.
-    subprocess.run([apk, "mkndx", "--allow-untrusted", "--sign", str(sdk / "private-key.pem"),
-                    "--pkgname-spec", "${name}-${hash}.apk", "--output", "packages.adb",
+    # Index schema fields use "hashes"; the download URL formatter uses "hash".
+    # Reuse verified entries using their schema field, then write the URL spec.
+    subprocess.run([apk, "--keys-dir", str(sdk), "verify", str(directory / "packages.adb")], check=True)
+    temporary = directory / "packages.normalized.adb"
+    subprocess.run([apk, "mkndx", "--keys-dir", str(sdk), "--sign", str(sdk / "private-key.pem"),
+                    "--index", "packages.adb", "--filter-spec", "${name}-${hashes}.apk",
+                    "--pkgname-spec", "${name}-${hash}.apk", "--output", temporary.name,
                     *[p.name for p in sorted(directory.glob("*.apk"))]], cwd=directory, check=True)
+    normalized = json.loads(subprocess.check_output([apk, "adbdump", "--format", "json", str(temporary)], text=True))
+    if normalized.get("packages", []) != index["packages"]:
+        raise ValueError("APK filename normalization changed the indexed packages")
+    temporary.replace(directory / "packages.adb")
     data = subprocess.check_output([apk, "adbdump", "--format", "json", str(directory / "packages.adb")])
     metadata = json.loads((directory / "build.json").read_text())
     with (directory / "index.json").open("wb") as output:

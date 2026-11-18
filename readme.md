@@ -97,7 +97,7 @@ packages-immortalwrt-25.12.2-rockchip-armv8
 | apk | `packages.adb` | 单独的 `.apk` 附件 | `feed-key.pem` |
 | opkg | `Packages`、`Packages.gz`、`Packages.sig` | 单独的 `.ipk` 附件 | `feed-key.pub` |
 
-另有 `build.json`、`sources.json`、`merge-report.json`、`sha256sums` 和 `build-configs.tar.gz`。SDK 和各组中间产物仍作为 Actions artifact 临时传递。首次创建草稿 Release，附件校验完成后公开；后续同版本/target 构建直接更新已有 Release。先上传新软件包，最后替换索引并核对名称、大小和 GitHub SHA256，成功后清理过期软件包。构建 ID、执行轮次和源码提交保留在 `build.json`，不进入 tag。
+另有 `build.json`、`sources.json`、`merge-report.json`、`sha256sums` 和 `build-configs.tar.gz`。SDK 和各组中间产物仍作为 Actions artifact 临时传递。首次创建草稿 Release，公开前核对附件名称、大小和 GitHub SHA256；草稿附件可能使用 `untagged-...` 临时 URL，公开后再严格校验正式 tag 的下载地址。后续同版本/target 构建直接更新已有 Release。先上传新软件包，最后替换索引，所有内容和正式下载地址验证成功后才清理过期软件包。构建 ID、执行轮次和源码提交保留在 `build.json`，不进入 tag。
 
 APK 使用签名索引中的 `${name}-${hash}.apk` 下载规则；opkg 文件名同样带内容摘要，并在规范化后重新索引。包内部版本和内容保留，避免 GitHub 调整附件名后出现下载 404；新旧软件包可在替换索引前共存。设备和 LuCI 仍按正常包名安装、显示版本。
 

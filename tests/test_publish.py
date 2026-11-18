@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -27,6 +28,8 @@ class FakeGitHub:
         self.corrupt = corrupt
         self.next_id = 1
         self.url = publisher.release_location(metadata, "owner/repo")[1]
+        self.draft_url = self.url.rsplit("/", 1)[0] + "/untagged-0123456789abcdef"
+        self.uploaded_urls = []
 
     def api(self, endpoint, method="GET", payload=None):
         self.calls.append((method, endpoint, payload))
@@ -44,7 +47,12 @@ class FakeGitHub:
         if method == "GET":
             page = int(endpoint.rsplit("=", 1)[1])
             return self.assets[(page - 1) * 100:page * 100]
+        was_draft = self.release.get("draft", False)
         self.release.update(payload)
+        if was_draft and not self.release.get("draft", False):
+            for asset in self.assets:
+                if asset["browser_download_url"].startswith(self.draft_url + "/"):
+                    asset["browser_download_url"] = self.url + "/" + asset["name"]
         return dict(self.release)
 
     def upload(self, files, clobber=False):
@@ -55,8 +63,10 @@ class FakeGitHub:
                 if not clobber:
                     raise AssertionError("Attempted to overwrite an existing package")
                 self.assets.remove(existing)
+            url = (self.draft_url if self.release.get("draft", False) else self.url) + "/" + path.name
+            self.uploaded_urls.append(url)
             self.assets.append(dict(id=self.next_id, name=path.name, state="uploaded", size=path.stat().st_size,
-                                    browser_download_url=self.url + "/" + path.name, digest="sha256:" + publisher.sha256(path)))
+                                    browser_download_url=url, digest="sha256:" + publisher.sha256(path)))
             self.next_id += 1
         if self.corrupt and any(path.name == "packages.adb" for path in files):
             self.corrupt(self.assets)
@@ -129,8 +139,53 @@ class PublishTests(unittest.TestCase):
             self.assertIn("/releases/download/", url)
             self.assertTrue(next(payload for method, _, payload in calls if method == "POST")["draft"])
             self.assertTrue(any(method == "GET" and "page=2" in endpoint for method, endpoint, _ in calls))
-            self.assertEqual(calls[-1][0], "PATCH")
-            self.assertFalse(calls[-1][2]["draft"])
+            published = next(i for i, (method, _, payload) in enumerate(calls) if method == "PATCH" and payload.get("draft") is False)
+            self.assertTrue(any(method == "GET" for method, _, _ in calls[published + 1:]))
+
+    def test_draft_urls_become_final_urls_after_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            (root / "build-configs").mkdir()
+            (root / "build-configs/platform.config").write_text("CONFIG_PACKAGE_example=m")
+            remote = FakeGitHub(self.metadata())
+            result = publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api, remote.upload)
+            self.assertTrue(any("/untagged-" in url and url.endswith("/build-configs.tar.gz") for url in remote.uploaded_urls))
+            self.assertFalse(remote.release["draft"])
+            self.assertTrue(all(asset["browser_download_url"] == result + "/" + asset["name"] for asset in remote.assets))
+
+    def test_wrong_final_url_is_rejected_after_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            def wrong_url(items):
+                items[0]["browser_download_url"] = "https://github.com/other/repo/releases/download/tag/package.apk"
+            remote = FakeGitHub(self.metadata(), wrong_url)
+            with self.assertRaisesRegex(ValueError, "Unexpected release download URL"):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api, remote.upload)
+            self.assertTrue(any(method == "PATCH" for method, _, _ in remote.calls))
+            self.assertFalse(any(method == "DELETE" for method, _, _ in remote.calls))
+
+    def test_post_publication_url_failure_preserves_previous_packages(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            remote = FakeGitHub(self.metadata())
+            publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api, remote.upload)
+            (root / "package-0.apk").unlink()
+            (root / "package-new.apk").write_bytes(b"new package")
+            (root / "packages.adb").write_bytes(b"new index")
+            start = len(remote.calls)
+            def corrupt_after_publish(endpoint, method="GET", payload=None):
+                result = remote.api(endpoint, method, payload)
+                if method == "PATCH":
+                    asset = next(item for item in remote.assets if item["name"] == "package-new.apk")
+                    asset["browser_download_url"] = remote.draft_url + "/package-new.apk"
+                return result
+            with self.assertRaisesRegex(ValueError, "Unexpected release download URL"):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "2", "1", corrupt_after_publish, remote.upload)
+            self.assertIn("package-0.apk", {asset["name"] for asset in remote.assets})
+            self.assertFalse(any(method == "DELETE" for method, _, _ in remote.calls[start:]))
 
     def test_renamed_or_corrupt_assets_leave_release_unpublished(self):
         for mutate in [lambda items: items[0].update(name="renamed.apk"), lambda items: items[0].update(digest="sha256:wrong")]:
@@ -209,6 +264,39 @@ class PublishTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "editable"):
                 publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "2", "1", remote.api, remote.upload)
             self.assertFalse(any(method in {"POST", "PATCH", "DELETE", "UPLOAD"} for method, _, _ in remote.calls[start:]))
+
+
+@unittest.skipUnless(os.getenv("TEST_APK_SDK"), "Set TEST_APK_SDK to test native APK filename normalization")
+class NativeAssetTests(unittest.TestCase):
+    def test_hash_filenames_preserve_index_without_specification_warnings(self):
+        native = Path(os.environ["TEST_APK_SDK"]).resolve()
+        apk = str(native / "staging_dir/host/bin/apk")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sdk, repo, payload = [root / name for name in ("sdk", "repo", "payload")]
+            for path in (sdk, repo, payload):
+                path.mkdir()
+            (sdk / "staging_dir").symlink_to(native / "staging_dir", target_is_directory=True)
+            (sdk / "scripts").symlink_to(native / "scripts", target_is_directory=True)
+            subprocess.run(["openssl", "genpkey", "-algorithm", "EC", "-pkeyopt", "ec_paramgen_curve:P-256", "-out", str(sdk / "private-key.pem")], check=True, capture_output=True)
+            subprocess.run(["openssl", "pkey", "-in", str(sdk / "private-key.pem"), "-pubout", "-out", str(sdk / "public-key.pem")], check=True, capture_output=True)
+            (payload / "sample.txt").write_text("original payload")
+            original = repo / "example-1.0~abc-r1.apk"
+            subprocess.run([apk, "mkpkg", "--info", "name:example", "--info", "version:1.0~abc-r1", "--info", "arch:noarch", "--info", "license:MIT", "--files", str(payload), "--output", str(original)], check=True, capture_output=True)
+            original_digest = publisher.sha256(original)
+            subprocess.run([apk, "mkndx", "--allow-untrusted", "--sign", str(sdk / "private-key.pem"), "--output", str(repo / "packages.adb"), str(original)], check=True, capture_output=True)
+            before = json.loads(subprocess.check_output([apk, "adbdump", "--format", "json", str(repo / "packages.adb")]))
+            (repo / "build.json").write_text(json.dumps({"arch": "aarch64_generic"}))
+            result = subprocess.run(["python3", str(ROOT / "scripts/feed-assets.py"), "apk", str(repo), str(sdk)], text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn("not matching package name specification", result.stderr)
+            renamed = list(repo.glob("*.apk"))
+            self.assertEqual(len(renamed), 1)
+            self.assertEqual(publisher.sha256(renamed[0]), original_digest)
+            after = json.loads(subprocess.check_output([apk, "adbdump", "--format", "json", str(repo / "packages.adb")]))
+            self.assertEqual(after["packages"], before["packages"])
+            self.assertEqual(renamed[0].name, "example-" + after["packages"][0]["hashes"] + ".apk")
+            subprocess.run([apk, "--keys-dir", str(sdk), "verify", str(repo / "packages.adb")], check=True, capture_output=True)
 
 
 if __name__ == "__main__":
