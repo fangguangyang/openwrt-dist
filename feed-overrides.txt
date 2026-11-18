@@ -7,3 +7,5 @@ openlist luci-app-openlist2 openlist2
 istore luci-app-store taskd luci-lib-taskd luci-lib-xterm
 nas quickstart
 nas_luci luci-app-quickstart
+modemfeed xmm-modem luci-proto-xmm
+threeginfo luci-app-3ginfo-lite

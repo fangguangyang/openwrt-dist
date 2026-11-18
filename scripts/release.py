@@ -90,7 +90,6 @@ def resolve(distro, requested, devices):
             "id": device, "distro": distro, "version": version, "target": target,
             "profile": profile, "arch": profiles["arch_packages"], "package_manager": pm,
             "source_branch": branch, "directory": directory,
-            "feed_branch": f"packages/{distro}/{version}/{target}",
             "sdk": archive(sums, distro, "sdk"),
             "imagebuilder": archive(sums, distro, "imagebuilder"),
             "version_code": profiles.get("version_code", ""),

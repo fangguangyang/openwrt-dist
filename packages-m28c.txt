@@ -2,3 +2,6 @@ luci-theme-design
 luci-app-store
 luci-app-quickstart
 xz-utils
+xmm-modem
+luci-proto-xmm
+luci-app-3ginfo-lite

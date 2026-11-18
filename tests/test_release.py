@@ -29,7 +29,7 @@ class ReleaseTests(unittest.TestCase):
             result = release.resolve("immortalwrt", "25.12.2", ["amd64", "m28c"])
         self.assertEqual([item["target"] for item in result["include"]], ["x86/64", "rockchip/armv8"])
         self.assertEqual(result["include"][1]["package_manager"], "apk")
-        self.assertEqual(result["include"][1]["feed_branch"], "packages/immortalwrt/25.12.2/rockchip/armv8")
+        self.assertEqual(result["include"][1]["profile"], "widora_mangopi-m28c")
 
     def test_missing_device_profile_fails(self):
         with patch.object(release, "fetch", return_value=b'{"profiles":{"generic":{}}}'):

@@ -24,6 +24,18 @@ if [[ $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["distro"
     printf 'src-git immortal_luci https://github.com/immortalwrt/luci.git;%s\n' "$branch" >> feeds.conf.default
 fi
 ./scripts/feeds update -a
+# Rust CI LLVM artifacts can expire. Build the bundled LLVM source instead,
+# matching upstream OpenWrt rather than depending on that temporary download.
+python3 - <<'PY'
+from pathlib import Path
+import re
+path = Path('feeds/packages/lang/rust/Makefile')
+text, count = re.subn(r'--set=llvm\.download-ci-llvm=\S+',
+                      '--set=llvm.download-ci-llvm=false', path.read_text())
+if count != 1:
+    raise SystemExit('Expected one llvm.download-ci-llvm option in the Rust recipe')
+path.write_text(text)
+PY
 # A repository with its Makefile at the root is a single package, not a feed:
 # the SDK feed scanner expects recipes in subdirectories.
 python3 - "$root/single-packages.json" <<'PY'
@@ -123,7 +135,7 @@ sources['golang'] = subprocess.check_output(['git', '-C', '../golang-source', 'r
 for package in Path('package/custom').iterdir():
     sources[package.name] = subprocess.check_output(['git', '-C', str(package), 'rev-parse', 'HEAD'], text=True).strip()
 patches = subprocess.check_output(['git', '-C', 'package/custom/luci-theme-design', 'diff'])
-patches += subprocess.check_output(['git', '-C', 'feeds/packages', 'diff', '--', 'net/curl/Config.in'])
+patches += subprocess.check_output(['git', '-C', 'feeds/packages', 'diff', '--', 'net/curl/Config.in', 'lang/rust/Makefile'])
 sources['compatibility_patch'] = hashlib.sha256(patches).hexdigest()
 Path('sources.json').write_text(json.dumps(sources, indent=2) + '\n')
 PY

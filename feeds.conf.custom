@@ -7,3 +7,5 @@ src-git openlist https://github.com/sbwml/luci-app-openlist2.git;main
 src-git istore https://github.com/linkease/istore.git;main
 src-git nas https://github.com/linkease/nas-packages.git;master
 src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main
+src-git modemfeed https://github.com/koshev-msk/modemfeed.git;master
+src-git threeginfo https://github.com/4IceG/luci-app-3ginfo-lite.git;main

@@ -7,16 +7,16 @@ device=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])'
 manager=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_manager"])' "$metadata")
 repo="$root/repository/$device"
 python3 "$root/scripts/merge-feed.py" "$metadata" "$parts" "$repo"
+cp "$metadata" "$repo/build.json"
 cd "$root/.build/$device/sdk"
 make defconfig
-if [[ $manager == apk ]]; then
-    openssl ecparam -name prime256v1 -genkey -noout -out private-key.pem
-    openssl pkey -in private-key.pem -pubout -out public-key.pem
-else
-    staging_dir/host/bin/usign -G -s key-build -p key-build.pub -c 'Custom package build'
+python3 "$root/scripts/signing-key.py" install "$manager" "$PWD"
+if [[ $manager == opkg ]]; then
+    python3 "$root/scripts/feed-assets.py" opkg "$repo" "$PWD"
 fi
 make package/index "PACKAGE_SUBDIRS=$repo" CONFIG_SIGNED_PACKAGES=y
 if [[ $manager == apk ]]; then
+    python3 "$root/scripts/feed-assets.py" apk "$repo" "$PWD"
     test -s "$repo/packages.adb"
     cp public-key.pem "$repo/feed-key.pem"
     staging_dir/host/bin/apk --keys-dir "$PWD" verify "$repo/packages.adb"
