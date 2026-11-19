@@ -38,7 +38,7 @@ class PrebuiltTests(unittest.TestCase):
                 self.assertEqual(args[1], group)
                 self.assertEqual(args[2], str(root / "parts/amd64" / group))
                 marker.unlink()
-            result = subprocess.run(["bash", str(scripts / "build-packages.sh"), str(metadata), "mosdns"], capture_output=True)
+            result = subprocess.run(["bash", str(scripts / "build-packages.sh"), str(metadata), "platform"], capture_output=True)
             self.assertNotEqual(result.returncode, 0)  # This group still requires an SDK.
             self.assertFalse(marker.exists())
 

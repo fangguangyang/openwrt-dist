@@ -36,22 +36,19 @@ python3 scripts/signing-key.py generate opkg --usign /path/to/sdk/staging_dir/ho
 
 ## 并发编译
 
-每个架构的 SDK 和源码 feeds 只准备一次，4 个组使用 SDK 编译，另外 2 个组下载官方预编译包：
+每个架构的 SDK 和源码 feeds 只准备一次。`platform` 组使用 SDK 编译，另外 2 个组下载官方预编译包。
 
 | 软件组 | 主要软件 | 方式 |
 | --- | --- | --- |
 | `openclash` | OpenClash | 官方预编译包 |
 | `passwall` | PassWall、Xray、V2Ray Plugin、Simple Obfs、Shadowsocks Rust | 官方预编译包 |
-| `mosdns` | MosDNS 核心及 LuCI | SDK 编译 |
-| `openlist` | OpenList2 核心及 LuCI | SDK 编译 |
-| `storage` | Dockerman、Diskman | SDK 编译 |
-| `platform` | AdGuardHome、Argon、Modemband、SMS Tool；M28C 额外添加 Design、iStore、QuickStart、FM350 USB 拨号及 3ginfo-lite | SDK 编译 |
+| `platform` | AdGuardHome、Argon；M28C 额外添加 Design、QModem 和简体中文界面 | SDK 编译 |
 
 OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获取包管理器、软件源地址和公钥，原生 apk/opkg 验证官方索引及包内容。这两组不下载 SDK artifact、不恢复编译工具链、不调用 make，只下载 `package-groups.json` 中列出的软件包；普通运行依赖继续由设备或 ImageBuilder 的同版本官方源提供。合并后沿用现有签名和 Release 地址。预编译包的文件名、SHA256 和来源写入 `build-configs.tar.gz` 内的 `*.prebuilt.json`，版本以官方源为准。
 
 所选发行版、版本、架构缺少现成包时直接失败，不回退自编译或混用其他版本。默认 ImmortalWrt 提供这两组软件；选择上游 OpenWrt 前需确认其官方源是否包含它们。
 
-默认两种架构最多 **12 个任务并发**，其中编译任务使用 `make -j4`，预编译下载任务不运行 make。可选 Variables：
+默认两种架构共有 **6 个软件组任务**，其中编译任务使用 `make -j4`，预编译下载任务不运行 make。可选 Variables：
 
 - `BUILD_MAX_PARALLEL`：最大同时构建的任务数，默认 `12`。实际受 GitHub 账号并发配额限制。
 - `BUILD_JOBS`：单个编译任务的 make 并行度，默认 `4`，不影响预编译下载任务。
@@ -66,18 +63,18 @@ OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获�
 
 - `package-groups.json` 定义任务划分，`packages.txt` 是全部基本软件清单；两者必须一致。
 - `packages-m28c.txt` 是 M28C 平台附加软件。
-- M28C 的 FM350 USB 拨号使用 [modemfeed](https://github.com/koshev-msk/modemfeed) 当前的 `xmm-modem` / `luci-proto-xmm`（旧教程中的 `fm350-modem` / `luci-proto-fm350`），信号状态界面使用 [4IceG 的 `luci-app-3ginfo-lite`](https://github.com/4IceG/luci-app-3ginfo-lite)。明确指定包来源，仅构建这些包及其依赖；仍在现有 `platform` 组内编译，并随该架构的 Release 软件源发布。
+- M28C 的 `platform` 组使用 [QModem v3.3.0](https://github.com/FUjr/QModem/releases/tag/v3.3.0) 编译 `luci-app-qmodem-next`、简体中文翻译及 QModem 运行依赖。上游许可证包含非商业使用条款。 [QModem 许可证](https://github.com/FUjr/QModem/blob/v3.3.0/LICENSE)
 - `feeds.conf.custom` 定义第三方来源，`feed-overrides.txt` 明确每个覆盖包的归属；其余依赖使用 SDK 配套 feeds。
 - `single-packages.json` 定义 Makefile 位于仓库根目录的单包（Argon、Design），直接安装到 `package/custom`，避免 SDK 将根目录误识别为 feed。
-- Go 配方来自当前官方 `openwrt/packages`，支持新版本 OpenList/代理核心；不把整个稳定 feeds 替换为 master。所有 feeds 和 Go 提交记录在 `sources.json`。
-- MosDNS 核心、LuCI、geo2txt 来自同一个 sbwml feed，避免官方核心与另一来源 UI 的启动脚本冲突。AdGuardHome 使用 ImmortalWrt 配套 feed 的原生包。
-- 选择上游 OpenWrt 构建 amd64 时，从对应版本系列的 ImmortalWrt LuCI feed 补充 AdGuardHome、Modemband、SMS Tool 界面；核心和编译工具链仍使用 OpenWrt SDK。
+- Go 配方来自当前官方 `openwrt/packages`。所有 feeds 和 Go 提交记录在 `sources.json`。
+- AdGuardHome 使用 ImmortalWrt 配套 feed 的原生包。
+- 选择上游 OpenWrt 构建 amd64 时，从对应版本系列的 ImmortalWrt LuCI feed 补充 AdGuardHome 界面；核心和编译工具链使用 OpenWrt SDK。
 - Design 主题的日期版本后缀会规范为 apk 接受的格式；该兼容修改摘要也写入源码锁定信息。
 - SDK 中解除 curl 选项的外层菜单依赖，修复冻结 libc 配置与 LDAP 选项形成的 Kconfig 循环；保留包依赖及原有默认功能。
 - SDK 保留 `llvm.download-ci-llvm=false` 的兼容修改，供仍需 Rust 的自编译软件使用，摘要计入 `sources.json`。OpenClash、PassWall 两组使用预编译包，不再进入 Rust/LLVM 或 Ruby 编译步骤。
 - 最新 ImmortalWrt feeds 已移除独立 `luci-app-shadowsocks-libev`；旧 `luci-app-shadowsocks` / `openwrt-dist-luci` 的 Shadowsocks 功能统一改由 PassWall 管理，并提供官方预编译的 Shadowsocks Rust 客户端/服务端。不再运行手工安装的 po2lmo、跳过 `PKG_HASH` 或复制一整份重名 small 源。
 
-编译组只选择自己的软件及依赖；预编译组只下载清单指定的软件。合并时发布 `package-groups.json` 和设备附加清单中的指定软件，以及来自自定义 feed 的依赖；未被明确指定的 `base` / `luci` / `packages` / `routing` / `telephony` 公共依赖由同版本官方源提供，不重复发布各组生成的 `luci-base` 等基础包。MosDNS、OpenList、iStore 等自定义 feed 的核心和配套依赖仍保留。
+编译组只选择自己的软件及依赖；预编译组只下载清单指定的软件。合并时发布 `package-groups.json` 和设备附加清单中的指定软件，以及来自自定义 feed 的依赖；未被明确指定的 `base` / `luci` / `packages` / `routing` / `telephony` 公共依赖由同版本官方源提供，不重复发布各组生成的 `luci-base` 等基础包。
 
 自定义包同名异内容、缺少指定软件、不同源提交或缺组仍会让构建失败，不使用 `IGNORE_ERRORS=1`，也不随意选择某组的包覆盖冲突。所有输入检查通过后才复制并签名发布。`merge-report.json` 记录保留、排除、重复和冲突的包；发布失败时也单独上传 `merge-report-<设备>` artifact。此合并规则可直接处理已完成的各组 artifact，修复合并逻辑后只需重跑失败的发布任务，无需重新编译各组。
 

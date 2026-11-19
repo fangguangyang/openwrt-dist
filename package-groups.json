@@ -1,8 +1,5 @@
 {
   "openclash": ["luci-app-openclash"],
   "passwall": ["luci-app-passwall", "simple-obfs-client", "v2ray-plugin", "xray-core", "shadowsocks-rust-sslocal", "shadowsocks-rust-ssserver"],
-  "mosdns": ["luci-app-mosdns"],
-  "openlist": ["luci-app-openlist2"],
-  "storage": ["luci-app-dockerman", "luci-app-diskman"],
-  "platform": ["luci-app-adguardhome", "luci-theme-argon", "luci-app-modemband", "luci-app-sms-tool-js"]
+  "platform": ["luci-app-adguardhome", "luci-theme-argon"]
 }

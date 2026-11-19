@@ -1,7 +1,4 @@
 luci-theme-design
-luci-app-store
-luci-app-quickstart
 xz-utils
-xmm-modem
-luci-proto-xmm
-luci-app-3ginfo-lite
+luci-app-qmodem-next
+luci-i18n-qmodem-next-zh-cn

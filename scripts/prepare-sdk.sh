@@ -100,7 +100,7 @@ PY
 # unrelated SDK feed entries. Forced source owners above retain precedence.
 ./scripts/feeds install "${requested[@]}"
 if [[ -d feeds/immortal_luci ]]; then
-    ./scripts/feeds install -f -p immortal_luci luci-app-adguardhome luci-app-modemband luci-app-sms-tool-js
+    ./scripts/feeds install -f -p immortal_luci luci-app-adguardhome
 fi
 python3 - "$root/single-packages.json" <<'PY'
 from pathlib import Path

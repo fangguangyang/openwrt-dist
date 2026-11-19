@@ -108,7 +108,7 @@ class MergeTests(unittest.TestCase):
 
     def test_device_extra_packages_are_requested_and_missing_packages_fail(self):
         packages = merge.requested_packages(ROOT, "m28c")
-        self.assertTrue({"luci-theme-design", "xmm-modem", "luci-proto-xmm"} <= packages)
+        self.assertTrue({"luci-theme-design", "luci-app-qmodem-next", "luci-i18n-qmodem-next-zh-cn"} <= packages)
         self.assertNotIn("luci-base", packages)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
