@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -30,14 +31,17 @@ class FakeGitHub:
         self.url = publisher.release_location(metadata, "owner/repo")[1]
         self.draft_url = self.url.rsplit("/", 1)[0] + "/untagged-0123456789abcdef"
         self.uploaded_urls = []
+        self.other_releases = []
 
     def api(self, endpoint, method="GET", payload=None):
         self.calls.append((method, endpoint, payload))
         if "/releases/tags/" in endpoint:
-            if self.release is None:
+            if self.release is None or self.release.get("draft", False):
                 raise publisher.GitHubAPIError(404)
             return dict(self.release)
         if method == "POST":
+            if self.release is not None:
+                raise AssertionError("Created another release instead of resuming the existing draft")
             self.release = dict(payload, id=5)
             return dict(self.release)
         if method == "DELETE":
@@ -46,7 +50,14 @@ class FakeGitHub:
             return None
         if method == "GET":
             page = int(endpoint.rsplit("=", 1)[1])
+            if "/releases?" in endpoint:
+                releases = self.other_releases + ([] if self.release is None else [dict(self.release)])
+                return releases[(page - 1) * 100:page * 100]
+            if f"/releases/{self.release['id']}/assets?" not in endpoint:
+                raise AssertionError("Read assets from a different Release ID")
             return self.assets[(page - 1) * 100:page * 100]
+        if not endpoint.endswith(f"/releases/{self.release['id']}"):
+            raise AssertionError("Updated a different Release ID")
         was_draft = self.release.get("draft", False)
         self.release.update(payload)
         if was_draft and not self.release.get("draft", False):
@@ -70,6 +81,20 @@ class FakeGitHub:
             self.next_id += 1
         if self.corrupt and any(path.name == "packages.adb" for path in files):
             self.corrupt(self.assets)
+
+    def api_upload(self, command, **kwargs):
+        if command[:4] != ["gh", "api", "--method", "POST"]:
+            raise AssertionError("Upload must use the release asset API")
+        prefix = f"https://uploads.github.com/repos/owner/repo/releases/{self.release['id']}/assets?name="
+        if not command[4].startswith(prefix):
+            raise AssertionError("Uploaded to a different Release ID")
+        if "Content-Type: application/octet-stream" not in command:
+            raise AssertionError("Upload must send the original binary file")
+        path = Path(command[command.index("--input") + 1])
+        if command[4] != prefix + path.name:
+            raise AssertionError("Uploaded filename differs from the original file")
+        self.upload([path])
+        return subprocess.CompletedProcess(command, 0)
 
 
 class PublishTests(unittest.TestCase):
@@ -153,6 +178,97 @@ class PublishTests(unittest.TestCase):
             self.assertTrue(any("/untagged-" in url and url.endswith("/build-configs.tar.gz") for url in remote.uploaded_urls))
             self.assertFalse(remote.release["draft"])
             self.assertTrue(all(asset["browser_download_url"] == result + "/" + asset["name"] for asset in remote.assets))
+
+    def test_retry_resumes_draft_and_skips_already_uploaded_packages(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root, count=3)
+            remote = FakeGitHub(self.metadata())
+            def interrupted_upload(files, clobber=False):
+                remote.upload(files[:1], clobber)
+                raise RuntimeError("Upload interrupted")
+            with self.assertRaisesRegex(RuntimeError, "Upload interrupted"):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api, interrupted_upload)
+            self.assertTrue(remote.release["draft"])
+            original_package_id = remote.assets[0]["id"]
+            start = len(remote.calls)
+            publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "2", remote.api, remote.upload)
+            self.assertFalse(remote.release["draft"])
+            self.assertFalse(any(method == "POST" for method, _, _ in remote.calls[start:]))
+            self.assertFalse(any(method == "UPLOAD" and "package-0.apk" in names for method, names, _ in remote.calls[start:]))
+            self.assertEqual(next(asset["id"] for asset in remote.assets if asset["name"] == "package-0.apk"), original_package_id)
+
+    def test_draft_lookup_paginates_and_uploads_to_selected_release_id(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            remote = FakeGitHub(self.metadata())
+            tag, _ = publisher.release_location(self.metadata(), "owner/repo")
+            remote.release = dict(id=5, tag_name=tag, draft=True)
+            remote.other_releases = [dict(id=1000 + i, tag_name=f"unrelated-{i}", draft=True) for i in range(100)]
+            remote.other_releases += [dict(id=20, tag_name=tag, draft=True)]
+            with patch.object(publisher.subprocess, "run", side_effect=remote.api_upload) as run:
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api)
+            self.assertTrue(run.called)
+            self.assertTrue(any(method == "GET" and "/releases?per_page=100&page=2" in endpoint for method, endpoint, _ in remote.calls))
+            self.assertFalse(any(method == "POST" for method, _, _ in remote.calls))
+            self.assertFalse(remote.release["draft"])
+
+    def test_repeated_publication_preserves_packages_and_replaces_only_changed_metadata(self):
+        for manager in ("apk", "opkg"):
+            with self.subTest(manager=manager), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                self.feed(root, manager=manager)
+                metadata = self.metadata(package_manager=manager)
+                remote = FakeGitHub(metadata)
+                publisher.publish(metadata, root, "owner/repo", "a" * 40, "1", "1", remote.api, remote.upload)
+                original = {asset["name"]: asset["id"] for asset in remote.assets}
+                remote.other_releases = [dict(id=1, tag_name=remote.release["tag_name"], draft=True)]
+                start = len(remote.calls)
+                with patch.object(publisher.subprocess, "run", side_effect=remote.api_upload):
+                    publisher.publish(metadata, root, "owner/repo", "a" * 40, "1", "2", remote.api)
+                for asset in remote.assets:
+                    if asset["name"] not in {"build.json", "sha256sums"}:
+                        self.assertEqual(asset["id"], original[asset["name"]])
+                uploaded = {name for method, names, _ in remote.calls[start:] if method == "UPLOAD" for name in names}
+                self.assertEqual(uploaded, {"build.json", "sha256sums"})
+                self.assertFalse(any(method == "POST" for method, _, _ in remote.calls[start:]))
+
+    def test_retry_replaces_an_incomplete_starter_asset(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            remote = FakeGitHub(self.metadata())
+            tag, _ = publisher.release_location(self.metadata(), "owner/repo")
+            remote.release = dict(id=5, tag_name=tag, draft=True)
+            remote.assets = [dict(id=99, name="package-0.apk", state="starter", size=0, digest=None)]
+            with patch.object(publisher.subprocess, "run", side_effect=remote.api_upload):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "2", remote.api)
+            self.assertTrue(any(method == "DELETE" and endpoint.endswith("/assets/99") for method, endpoint, _ in remote.calls))
+            self.assertTrue(all(asset["state"] == "uploaded" for asset in remote.assets))
+            self.assertFalse(remote.release["draft"])
+
+    def test_existing_package_with_different_bytes_is_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            remote = FakeGitHub(self.metadata())
+            publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", remote.api, remote.upload)
+            (root / "package-0.apk").write_bytes(b"different bytes under the same filename")
+            start = len(remote.calls)
+            with self.assertRaisesRegex(ValueError, "same content-addressed name has different bytes"):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "2", remote.api, remote.upload)
+            self.assertFalse(any(method in {"POST", "PATCH", "DELETE", "UPLOAD"} for method, _, _ in remote.calls[start:]))
+
+    def test_release_lookup_error_does_not_create_a_draft(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.feed(root)
+            def forbidden(endpoint, method="GET", payload=None):
+                self.assertEqual(method, "GET")
+                raise publisher.GitHubAPIError(403)
+            with self.assertRaises(publisher.GitHubAPIError):
+                publisher.publish(self.metadata(), root, "owner/repo", "a" * 40, "1", "1", forbidden)
 
     def test_wrong_final_url_is_rejected_after_publication(self):
         with tempfile.TemporaryDirectory() as directory:

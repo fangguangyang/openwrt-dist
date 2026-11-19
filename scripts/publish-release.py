@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import tarfile
+from urllib.parse import quote
 
 
 def sha256(path):
@@ -113,6 +114,45 @@ def same_asset(asset, path):
             and asset.get("digest") == "sha256:" + sha256(path))
 
 
+def find_release(repository, tag, api):
+    try:
+        return api(f"repos/{repository}/releases/tags/{tag}")
+    except GitHubAPIError as error:
+        if error.status != 404:
+            raise
+    # The tag endpoint only returns published releases. A failed first upload
+    # leaves a draft that must be resumed instead of creating another one.
+    drafts = []
+    page = 1
+    while True:
+        batch = api(f"repos/{repository}/releases?per_page=100&page={page}")
+        drafts.extend(release for release in batch if release.get("draft") and release.get("tag_name") == tag)
+        if len(batch) < 100:
+            break
+        page += 1
+    # Earlier versions could leave several drafts for one tag. Pick the oldest
+    # consistently; all later operations, including uploads, use this exact ID.
+    return min(drafts, key=lambda release: release["id"]) if drafts else None
+
+
+def upload_assets(repository, release_id, paths, clobber=False, api=gh_api):
+    existing = {asset["name"]: asset for asset in list_assets(repository, release_id, api)}
+    for path in paths:
+        asset = existing.get(path.name)
+        if asset and same_asset(asset, path):
+            continue
+        if asset:
+            # A failed upload can leave an empty starter asset; it is not a
+            # usable package and can be replaced when resuming publication.
+            if not clobber and asset.get("state") != "starter":
+                raise ValueError("Refusing to overwrite an existing package: " + path.name)
+            api(f"repos/{repository}/releases/assets/{asset['id']}", "DELETE")
+        endpoint = f"https://uploads.github.com/repos/{repository}/releases/{release_id}/assets?name={quote(path.name, safe='')}"
+        subprocess.run(["gh", "api", "--method", "POST", endpoint,
+                        "--header", "Content-Type: application/octet-stream", "--input", str(path)],
+                       stdout=subprocess.DEVNULL, check=True)
+
+
 def publish(metadata, directory, repository, source_commit, run_id, attempt, api=gh_api, upload=None):
     tag, feed_url = release_location(metadata, repository)
     metadata = dict(metadata, source_commit=source_commit, build_run_id=str(run_id), build_attempt=str(attempt))
@@ -122,17 +162,15 @@ def publish(metadata, directory, repository, source_commit, run_id, attempt, api
             "Use packages.adb for apk or src/gz with this directory for opkg. Import the matching feed-key first. "
             "Each package is an individual asset. Rebuilds update this feed with the same public key.\n")
     name = f"Packages {metadata['distro']} {metadata['version']} {metadata['target']}"
-    try:
-        current = api(f"repos/{repository}/releases/tags/{tag}")
-    except GitHubAPIError as error:
-        if error.status != 404:
-            raise
+    current = find_release(repository, tag, api)
+    if current is None:
         current = api(f"repos/{repository}/releases", "POST", {
             "tag_name": tag, "target_commitish": source_commit, "name": name,
             "body": body, "draft": True, "prerelease": metadata["version"] == "SNAPSHOT", "make_latest": "false",
         })
     if current.get("immutable"):
         raise ValueError("The fixed feed Release must be editable; this repository has immutable releases enabled")
+    print(f"Publishing {tag} using {'draft' if current.get('draft') else 'published'} Release {current['id']}", flush=True)
     original = list_assets(repository, current["id"], api)
     existing = {asset["name"]: asset for asset in original}
     key_name = "feed-key.pem" if metadata["package_manager"] == "apk" else "feed-key.pub"
@@ -142,12 +180,11 @@ def publish(metadata, directory, repository, source_commit, run_id, attempt, api
         raise ValueError("Not enough Release asset slots to stage the new feed without removing current packages")
     packages = [path for path in files if path.suffix in {".apk", ".ipk"}]
     for path in packages:
-        if path.name in existing and not same_asset(existing[path.name], path):
+        if path.name in existing and existing[path.name].get("state") != "starter" and not same_asset(existing[path.name], path):
             raise ValueError("A package asset with the same content-addressed name has different bytes: " + path.name)
     if upload is None:
         def upload(paths, clobber=False):
-            subprocess.run(["gh", "release", "upload", tag, "--repo", repository,
-                            *(["--clobber"] if clobber else []), *[str(p) for p in paths]], check=True)
+            upload_assets(repository, current["id"], paths, clobber, api)
     indexes = {"packages.adb", "Packages", "Packages.gz", "Packages.sig"}
     phases = [packages, [p for p in files if p not in packages and p.name not in indexes],
               [p for p in files if p.name in indexes]]

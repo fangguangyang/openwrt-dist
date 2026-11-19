@@ -99,6 +99,8 @@ packages-immortalwrt-25.12.2-rockchip-armv8
 
 另有 `build.json`、`sources.json`、`merge-report.json`、`sha256sums` 和 `build-configs.tar.gz`。SDK 和各组中间产物仍作为 Actions artifact 临时传递。首次创建草稿 Release，公开前核对附件名称、大小和 GitHub SHA256；草稿附件可能使用 `untagged-...` 临时 URL，公开后再严格校验正式 tag 的下载地址。后续同版本/target 构建直接更新已有 Release。先上传新软件包，最后替换索引，所有内容和正式下载地址验证成功后才清理过期软件包。构建 ID、执行轮次和源码提交保留在 `build.json`，不进入 tag。
 
+发布失败后重试会查找并恢复同 tag 的草稿，已上传且 SHA256 相同的附件直接复用；未完成上传留下的 `starter` 附件会重新上传。若旧任务留下多个同 tag 草稿，固定选择最早的一份，上传、校验和发布均使用同一个 Release ID，避免按 tag 解析到其他草稿。完整上传的同名软件包若内容不同仍会报错。
+
 APK 使用签名索引中的 `${name}-${hash}.apk` 下载规则；opkg 文件名同样带内容摘要，并在规范化后重新索引。包内部版本和内容保留，避免 GitHub 调整附件名后出现下载 404；新旧软件包可在替换索引前共存。设备和 LuCI 仍按正常包名安装、显示版本。
 
 每次发布使用相同 Secret 中的原生签名密钥，只发布公钥。私钥不上传到 Release 或 artifact，也不会关闭签名检查。`TOKEN` 继续用于 Release 发布，签名 Secret 仅用于签署索引。固定 tag 要求 Release 可编辑；不会修改其他版本或 target 的 Release。
