@@ -42,7 +42,7 @@ python3 scripts/signing-key.py generate opkg --usign /path/to/sdk/staging_dir/ho
 | --- | --- | --- |
 | `openclash` | OpenClash | 官方预编译包 |
 | `passwall` | PassWall、Xray、V2Ray Plugin、Simple Obfs、Shadowsocks Rust | 官方预编译包 |
-| `platform` | AdGuardHome、Argon；M28C 额外添加 Design、QModem 和简体中文界面 | SDK 编译 |
+| `platform` | Argon；M28C 额外添加 Design、QModem 和简体中文界面 | SDK 编译 |
 
 OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获取包管理器、软件源地址和公钥，原生 apk/opkg 验证官方索引及包内容。这两组不下载 SDK artifact、不恢复编译工具链、不调用 make，只下载 `package-groups.json` 中列出的软件包；普通运行依赖继续由设备或 ImageBuilder 的同版本官方源提供。合并后沿用现有签名和 Release 地址。预编译包的文件名、SHA256 和来源写入 `build-configs.tar.gz` 内的 `*.prebuilt.json`，版本以官方源为准。
 
@@ -67,8 +67,6 @@ OpenClash、PassWall 两组通过经过 SHA256 校验的官方 ImageBuilder 获�
 - `feeds.conf.custom` 定义第三方来源，`feed-overrides.txt` 明确每个覆盖包的归属；其余依赖使用 SDK 配套 feeds。
 - `single-packages.json` 定义 Makefile 位于仓库根目录的单包（Argon、Design），直接安装到 `package/custom`，避免 SDK 将根目录误识别为 feed。
 - Go 配方来自当前官方 `openwrt/packages`。所有 feeds 和 Go 提交记录在 `sources.json`。
-- AdGuardHome 使用 ImmortalWrt 配套 feed 的原生包。
-- 选择上游 OpenWrt 构建 amd64 时，从对应版本系列的 ImmortalWrt LuCI feed 补充 AdGuardHome 界面；核心和编译工具链使用 OpenWrt SDK。
 - Design 主题的日期版本后缀会规范为 apk 接受的格式；该兼容修改摘要也写入源码锁定信息。
 - SDK 中解除 curl 选项的外层菜单依赖，修复冻结 libc 配置与 LDAP 选项形成的 Kconfig 循环；保留包依赖及原有默认功能。
 - SDK 保留 `llvm.download-ci-llvm=false` 的兼容修改，供仍需 Rust 的自编译软件使用，摘要计入 `sources.json`。OpenClash、PassWall 两组使用预编译包，不再进入 Rust/LLVM 或 Ruby 编译步骤。

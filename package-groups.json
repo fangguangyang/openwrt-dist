@@ -1,5 +1,5 @@
 {
   "openclash": ["luci-app-openclash"],
   "passwall": ["luci-app-passwall", "simple-obfs-client", "v2ray-plugin", "xray-core", "shadowsocks-rust-sslocal", "shadowsocks-rust-ssserver"],
-  "platform": ["luci-app-adguardhome", "luci-theme-argon"]
+  "platform": ["luci-theme-argon"]
 }

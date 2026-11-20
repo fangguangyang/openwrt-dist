@@ -17,12 +17,6 @@ if not isinstance(epoch, int) or epoch <= 0:
 Path('version.date').write_text(str(epoch) + '\n')
 PY
 cat "$root/feeds.conf.custom" >> feeds.conf.default
-if [[ $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["distro"])' "$metadata") == openwrt ]]; then
-    branch=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_branch"])' "$metadata")
-    [[ $branch != main ]] || branch=master
-    # These LuCI applications live in ImmortalWrt rather than upstream LuCI.
-    printf 'src-git immortal_luci https://github.com/immortalwrt/luci.git;%s\n' "$branch" >> feeds.conf.default
-fi
 ./scripts/feeds update -a
 # Rust CI LLVM artifacts can expire. Build the bundled LLVM source instead,
 # matching upstream OpenWrt rather than depending on that temporary download.
@@ -99,9 +93,6 @@ PY
 # Install requested applications and their dependencies, not thousands of
 # unrelated SDK feed entries. Forced source owners above retain precedence.
 ./scripts/feeds install "${requested[@]}"
-if [[ -d feeds/immortal_luci ]]; then
-    ./scripts/feeds install -f -p immortal_luci luci-app-adguardhome
-fi
 python3 - "$root/single-packages.json" <<'PY'
 from pathlib import Path
 import json, sys

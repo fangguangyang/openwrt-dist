@@ -1,6 +1,5 @@
 # Custom applications plus maintained replacements for the old Lua proxy apps.
 luci-app-openclash
-luci-app-adguardhome
 luci-app-passwall
 luci-theme-argon
 shadowsocks-rust-sslocal
